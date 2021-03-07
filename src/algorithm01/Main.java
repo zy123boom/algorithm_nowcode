@@ -3,6 +3,10 @@ package algorithm01;
 
 import algorithm01.algorithm.LruCache;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
 /**
  * 牛客算法题，频率由高到低
  *
@@ -92,7 +96,142 @@ public class Main {
         return result;
     }
 
+    /**
+     * 4. 判断链表中是否有环
+     * 判断给定的链表中是否有环。如果有环则返回true，否则返回false。
+     * 你能给出空间复杂度的解法么？
+     *
+     * @param head
+     * @return
+     */
+    public boolean hasCycle(ListNode head) {
+        ListNode fast = head;
+        ListNode slow = head;
+        if (fast == null) {
+            return false;
+        }
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            if (fast == slow) {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    // 45题所用
+    List<Integer> pre = new ArrayList<>();
+    List<Integer> in = new ArrayList<>();
+    List<Integer> post = new ArrayList<>();
+
+    /**
+     * 45.二叉树先序、中序和后序遍历
+     * <p>
+     * 分别按照二叉树先序，中序和后序打印所有的节点。
+     * 输入{1,2,3}
+     * 返回值 [[1,2,3],[2,1,3],[2,3,1]]
+     *
+     * @param root
+     * @return
+     */
+    public int[][] threeOrders(TreeNode root) {
+        List<List<Integer>> ans = new ArrayList<>();
+        preOrder(root);
+        inOrder(root);
+        postOrder(root);
+        ans.add(pre);
+        ans.add(in);
+        ans.add(post);
+        int m = ans.size();
+        int n = ans.get(0).size();
+        int[][] res = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                res[i][j] = ans.get(i).get(j);
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 先序遍历
+     * <p>
+     * 算法：设置栈，将根节点入栈，然后循环判断，当栈不为空时，取出栈顶元素加入到结果集中，
+     * 然后判断左右子节点是否有元素，有则加入到栈中。由于栈是先进后出，所以先判断右节点
+     * 再判断左节点
+     *
+     * @param root 二叉树
+     */
+    private void preOrder(TreeNode root) {
+        if (root != null) {
+            Stack<TreeNode> stack = new Stack<>();
+            stack.push(root);
+            while (!stack.isEmpty()) {
+                root = stack.pop();
+                pre.add(root.val);
+                if (root.right != null) {
+                    stack.push(root.right);
+                }
+                if (root.left != null) {
+                    stack.push(root.left);
+                }
+            }
+        }
+    }
+
+    /**
+     * 中序遍历
+     * <p>
+     * 算法：设置一个栈，当栈不为空时且根节点不为空时，将左子节点入栈。当无法入栈时则出栈
+     * 并将节点指向右节点。进行下一次操作。
+     *
+     * @param root 二叉树
+     */
+    private void inOrder(TreeNode root) {
+        if (root != null) {
+            Stack<TreeNode> stack = new Stack<>();
+            while (!stack.isEmpty() || root != null) {
+                if (root != null) {
+                    stack.push(root);
+                    root = root.left;
+                } else {
+                    root = stack.pop();
+                    in.add(root.val);
+                    root = root.right;
+                }
+            }
+        }
+    }
+
+    /**
+     * 后序遍历
+     *
+     * 算法：设置两个栈，一个元素栈一个帮助栈。类似前序遍历的算法，但是判断左右子节点时先判断左再判断右。
+     * 每次遍历元素栈时，将出栈的元素放到帮助栈中。最终不断出栈帮助栈的元素即是结果。
+     *
+     * @param root 二叉树
+     */
+    private void postOrder(TreeNode root) {
+        if (root != null) {
+            Stack<TreeNode> stack = new Stack<>();
+            Stack<TreeNode> help = new Stack<>();
+            stack.push(root);
+            while (!stack.isEmpty()) {
+                root = stack.pop();
+                help.push(root);
+                if (root.left != null) {
+                    stack.push(root.left);
+                }
+                if (root.right != null) {
+                    stack.push(root.right);
+                }
+            }
+            while (!help.isEmpty()) {
+                post.add(help.pop().val);
+            }
+        }
+    }
 }
 
 class ListNode {
@@ -103,3 +242,15 @@ class ListNode {
         this.val = val;
     }
 }
+
+
+class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+}
+
