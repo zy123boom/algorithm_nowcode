@@ -206,7 +206,7 @@ public class Main {
 
     /**
      * 后序遍历
-     *
+     * <p>
      * 算法：设置两个栈，一个元素栈一个帮助栈。类似前序遍历的算法，但是判断左右子节点时先判断左再判断右。
      * 每次遍历元素栈时，将出栈的元素放到帮助栈中。最终不断出栈帮助栈的元素即是结果。
      *
@@ -231,6 +231,84 @@ public class Main {
                 post.add(help.pop().val);
             }
         }
+    }
+
+    /**
+     * 105.二分查找
+     * <p>
+     * 请实现有重复数字的升序数组的二分查找
+     * 给定一个 元素有序的（升序）整型数组 nums 和一个目标值 target，写一个函数搜索 nums 中的 target，
+     * 如果目标值存在返回下标，否则返回 -1
+     *
+     * @param nums
+     * @param target
+     * @return
+     */
+    public int search(int[] nums, int target) {
+        int low = 0, high = nums.length - 1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (nums[mid] == target) {
+                while (mid != 0 && (nums[mid - 1] == nums[mid])) {
+                    mid--;
+                }
+                return mid;
+            } else if (nums[mid] > target) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 119.最小的K个数
+     * 给定一个数组，找出其中最小的K个数。例如数组元素是4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4。
+     * 如果K大于数组的长度，那么返回一个空的数组
+     *
+     * eg:
+     * 输入：[4,5,1,6,2,7,3,8],4
+     * 输出：[1,2,3,4]
+     *
+     * @param input
+     * @param k
+     * @return
+     */
+    public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
+        // 使用快排实现
+        ArrayList<Integer> res = new ArrayList<>();
+        if (input == null || input.length == 0 || k > input.length) {
+            return res;
+        }
+        quickSort(input, 0, input.length - 1);
+        for (int i = 0; i < k; i++) {
+            res.add(input[i]);
+        }
+        return res;
+    }
+
+    // 快速排序
+    private void quickSort(int[] arr, int start, int end) {
+        if (start >= end) {
+            return;
+        }
+        int low = start;
+        int high = end;
+        int stard = arr[start];
+        while (low < high) {
+            while (low < high && stard <= arr[high]) {
+                high--;
+            }
+            arr[low] = arr[high];
+            while (low < high && stard >= arr[low]) {
+                low++;
+            }
+            arr[high] = arr[low];
+        }
+        arr[low] = stard;
+        quickSort(arr, start, low);
+        quickSort(arr, low + 1, end);
     }
 }
 
