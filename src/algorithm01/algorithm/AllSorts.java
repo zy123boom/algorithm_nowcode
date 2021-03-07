@@ -84,7 +84,7 @@ public class AllSorts {
     }
 
     /**
-     * insert sort
+     * insert sorts
      * <p>
      * Insert sort algorithm is Each step inserts a piece of data to be sorted into the
      * previously sorted sequence until all elements are inserted.
