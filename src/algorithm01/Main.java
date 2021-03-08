@@ -3,9 +3,7 @@ package algorithm01;
 
 import algorithm01.algorithm.LruCache;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * 牛客算法题，频率由高到低
@@ -266,7 +264,7 @@ public class Main {
      * 119.最小的K个数
      * 给定一个数组，找出其中最小的K个数。例如数组元素是4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4。
      * 如果K大于数组的长度，那么返回一个空的数组
-     *
+     * <p>
      * eg:
      * 输入：[4,5,1,6,2,7,3,8],4
      * 输出：[1,2,3,4]
@@ -275,7 +273,7 @@ public class Main {
      * @param k
      * @return
      */
-    public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
+    public ArrayList<Integer> GetLeastNumbers_Solution(int[] input, int k) {
         // 使用快排实现
         ArrayList<Integer> res = new ArrayList<>();
         if (input == null || input.length == 0 || k > input.length) {
@@ -309,6 +307,64 @@ public class Main {
         arr[low] = stard;
         quickSort(arr, start, low);
         quickSort(arr, low + 1, end);
+    }
+
+    /**
+     * 15.二叉树的层次遍历
+     * <p>
+     * eg:
+     * 输入：{1,2}
+     * 输出：[[1],[2]]
+     *
+     * @param root
+     * @return
+     */
+    public ArrayList<ArrayList<Integer>> levelOrder(TreeNode root) {
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            ArrayList<Integer> level = new ArrayList<>();
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode head = queue.poll();
+                level.add(head.val);
+                if (head.left != null) {
+                    queue.offer(head.left);
+                }
+                if (head.right != null) {
+                    queue.offer(head.right);
+                }
+            }
+            res.add(level);
+        }
+        return res;
+    }
+
+    /**
+     * 68.跳台阶
+     * <p>
+     * 一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法
+     * （先后次序不同算不同的结果）。
+     *
+     * @param target
+     * @return
+     */
+    public int jumpFloor(int target) {
+        // 动态规划/斐波那契数列问题
+        if (target == 0 || target == 1) {
+            return target;
+        }
+        int a = 1, b = 1, c = 0;
+        for (int i = 2; i <= target; i++) {
+            c = a + b;
+            a = b;
+            b = c;
+        }
+        return c;
     }
 }
 
