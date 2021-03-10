@@ -366,6 +366,64 @@ public class Main {
         }
         return c;
     }
+
+    /**
+     * 19.子数组的最大累加和问题
+     *
+     * 给定一个数组arr，返回子数组的最大累加和
+     * 例如，arr = [1, -2, 3, 5, -2, 6, -1]，所有子数组中，[3, 5, -2, 6]可以累加出最大的和12，所以返回12.
+     * 题目保证没有全为负数的数据
+     * [要求]
+     * 时间复杂度为O(n)，空间复杂度为O(1)
+     *
+     * eg:
+     * 输入：[1, -2, 3, 5, -2, 6, -1]
+     * 返回：12
+     *
+     * @param arr
+     * @return
+     */
+    public int maxsumofSubarray (int[] arr) {
+        /*
+            动态规划简化而来。
+            1.dp定义：dp[i]表示下标为i时的最大累加和
+            2.初始化: dp[0] = arr[0]
+            3.状态转移方程（i从1开始）：
+                if dp[i-1] > 0  ->  dp[i] = dp[i-1] + arr[i]
+                if dp[i-1] < 0  ->  dp[i] = arr[i]
+            4.结果：res = Math.max(res, dp[i])
+         */
+        if (arr == null || arr.length == 0) {
+            return 0;
+        }
+        int sum = arr[0];
+        int currSum = sum;
+        for (int i = 1; i < arr.length; i++) {
+            currSum = currSum > 0 ? currSum + arr[i] : arr[i];
+            sum = Math.max(currSum, sum);
+        }
+        return sum;
+    }
+
+    /**
+     * 61.两数之和
+     *
+     * @param numbers
+     * @param target
+     * @return
+     */
+    public int[] twoSum (int[] numbers, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < numbers.length; i++) {
+            int complete = target - numbers[i];
+            if (map.containsKey(complete)) {
+                return new int[]{map.get(complete), i + 1};
+            }
+            map.put(numbers[i], i + 1);
+        }
+        return null;
+    }
+
 }
 
 class ListNode {
