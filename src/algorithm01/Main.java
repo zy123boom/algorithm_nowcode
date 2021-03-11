@@ -424,6 +424,93 @@ public class Main {
         return null;
     }
 
+    /**
+     * 33.合并两个有序链表(递归实现)
+     *
+     * @param l1
+     * @param l2
+     * @return
+     */
+    public ListNode mergeTwoLists (ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        }
+        if (l2 == null) {
+            return l1;
+        }
+        ListNode head = null;
+        if (l1.val < l2.val) {
+            head = l1;
+            head.next = mergeTwoLists(l1.next, l2);
+        } else {
+            head = l2;
+            head.next  =mergeTwoLists(l1, l2.next);
+        }
+        return head;
+    }
+
+    /**
+     * 33.合并两个有序链表(非递归实现)
+     *
+     * @param l1
+     * @param l2
+     * @return
+     */
+    public ListNode mergeTwoListsNonRecursion (ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(-1);
+        ListNode res = dummy;
+        while (l1 != null || l2 != null) {
+            if (l1 != null && l2 != null) {
+                if (l1.val < l2.val) {
+                    dummy.next = l1;
+                    l1 = l1.next;
+                } else {
+                    dummy.next = l2;
+                    l2 = l2.next;
+                }
+                dummy = dummy.next;
+            } else if (l1 != null && l2 == null) {
+                dummy.next = l1;
+                l1 = l1.next;
+                dummy = dummy.next;
+            } else if (l1 == null && l2 != null) {
+                dummy.next = l2;
+                l2 = l2.next;
+                dummy = dummy.next;
+            }
+        }
+        return res.next;
+    }
+
+    /**
+     * 76.两个栈实现队列
+     */
+    static class TwoStackImplementQueue {
+        Stack<Integer> stack1 = new Stack<Integer>();
+        Stack<Integer> stack2 = new Stack<Integer>();
+
+        public void push(int node) {
+            stack1.push(node);
+            dump();
+        }
+
+        public int pop() {
+            if (stack1.isEmpty() && stack2.isEmpty()) {
+                throw new RuntimeException();
+            }
+            dump();
+            return stack2.pop();
+        }
+
+        private void dump() {
+            if (stack2.isEmpty()) {
+                while (!stack1.isEmpty()) {
+                    stack2.push(stack1.pop());
+                }
+            }
+        }
+    }
+
 }
 
 class ListNode {
