@@ -369,13 +369,13 @@ public class Main {
 
     /**
      * 19.子数组的最大累加和问题
-     *
+     * <p>
      * 给定一个数组arr，返回子数组的最大累加和
      * 例如，arr = [1, -2, 3, 5, -2, 6, -1]，所有子数组中，[3, 5, -2, 6]可以累加出最大的和12，所以返回12.
      * 题目保证没有全为负数的数据
      * [要求]
      * 时间复杂度为O(n)，空间复杂度为O(1)
-     *
+     * <p>
      * eg:
      * 输入：[1, -2, 3, 5, -2, 6, -1]
      * 返回：12
@@ -383,7 +383,7 @@ public class Main {
      * @param arr
      * @return
      */
-    public int maxsumofSubarray (int[] arr) {
+    public int maxsumofSubarray(int[] arr) {
         /*
             动态规划简化而来。
             1.dp定义：dp[i]表示下标为i时的最大累加和
@@ -412,7 +412,7 @@ public class Main {
      * @param target
      * @return
      */
-    public int[] twoSum (int[] numbers, int target) {
+    public int[] twoSum(int[] numbers, int target) {
         Map<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < numbers.length; i++) {
             int complete = target - numbers[i];
@@ -431,7 +431,7 @@ public class Main {
      * @param l2
      * @return
      */
-    public ListNode mergeTwoLists (ListNode l1, ListNode l2) {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         if (l1 == null) {
             return l2;
         }
@@ -444,7 +444,7 @@ public class Main {
             head.next = mergeTwoLists(l1.next, l2);
         } else {
             head = l2;
-            head.next  =mergeTwoLists(l1, l2.next);
+            head.next = mergeTwoLists(l1, l2.next);
         }
         return head;
     }
@@ -456,7 +456,7 @@ public class Main {
      * @param l2
      * @return
      */
-    public ListNode mergeTwoListsNonRecursion (ListNode l1, ListNode l2) {
+    public ListNode mergeTwoListsNonRecursion(ListNode l1, ListNode l2) {
         ListNode dummy = new ListNode(-1);
         ListNode res = dummy;
         while (l1 != null || l2 != null) {
@@ -509,6 +509,83 @@ public class Main {
                 }
             }
         }
+    }
+
+    /**
+     * 50.链表中的节点每k个一组翻转
+     * <p>
+     * 将给出的链表中的节点每\ k k 个一组翻转，返回翻转后的链表
+     * 如果链表中的节点数不是\ k k 的倍数，将最后剩下的节点保持原样
+     * 你不能更改节点中的值，只能更改节点本身。
+     * 要求空间复杂度O(1)
+     * 例如：
+     * 给定的链表是1→2→3→4→5
+     * 对于 k=2, 你应该返回2→1→4→3→5
+     * 对于 k=3, 你应该返回3→2→1→4→5
+     *
+     * @param head
+     * @param k
+     * @return
+     */
+    public ListNode reverseKGroup(ListNode head, int k) {
+        // 方法一，使用栈
+        /*if (head == null) {
+            return null;
+        }
+        Stack<ListNode> stack = new Stack<>();
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode curr = dummy;
+        ListNode next = dummy.next;
+        while (next != null) {
+            for (int i = 0; i < k && next != null; i++) {
+                stack.push(next);
+                next = next.next;
+            }
+            if (stack.size() != k) {
+                return dummy.next;
+            }
+            while (!stack.isEmpty()) {
+                curr.next = stack.pop();
+                curr = curr.next;
+            }
+            curr.next = next;
+        }
+        return dummy.next;*/
+
+        // 方法二：两个指针，一个prev指向dummy，一个last在后面，要翻转的是prev和last之间的链表
+        if (head == null) {
+            return null;
+        }
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode prev = dummy;
+        while (prev != null) {
+            prev = reverse(prev, k);
+        }
+        return dummy.next;
+    }
+
+    private ListNode reverse(ListNode prev, int k) {
+        // 先让last往后走k个
+        ListNode last = prev;
+        for (int i = 0; i < k + 1; i++) {
+            last = last.next;
+            if (i != k && last == null) {
+                return null;
+            }
+        }
+
+        ListNode tail = prev.next;
+        ListNode curr = prev.next.next;
+        while (curr != last) {
+            ListNode next = curr.next;
+            curr.next = prev.next;
+            prev.next = curr;
+            tail.next = next;
+            curr = next;
+        }
+        return tail;
     }
 
 }
