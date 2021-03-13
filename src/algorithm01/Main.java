@@ -588,6 +588,65 @@ public class Main {
         return tail;
     }
 
+    /**
+     * 41.最长无重复子串
+     * <p>
+     * 给定一个数组arr，返回arr的最长无的重复子串的长度(无重复指的是所有数字都不相同)。
+     * eg:
+     * 输入[2,3,4,5]，输出4
+     * 输入[2,2,3,4,3]，输出3
+     *
+     * @param arr
+     * @return
+     */
+    public int maxLength(int[] arr) {
+        /*
+            方法一：HashSet + 双指针
+            使用双指针，快指针j，慢指针i。让j走，如果集合里不包含
+            当前字符，则加到字符里。如果包含了，则走慢指针i，不断的判断
+            i指针对应的字符是否出现在集合里，出现则移除掉，同时指针
+            右移。最后看set的size。即res = max{res, set.size()}
+         */
+        /*if (arr == null || arr.length == 0) {
+            return 0;
+        }
+        int res = 0;
+        HashSet<Integer> set = new HashSet<>();
+        for (int i = 0, j = 0; j < arr.length; j++) {
+            while (set.contains(arr[j])) {
+                set.remove(arr[i]);
+                i++;
+            }
+            set.add(arr[j]);
+            res = Math.max(res, set.size());
+        }
+        return res;*/
+
+        /*
+            方法二：HashMap+双指针(优化)。
+            方法一需要让慢指针每次走一格，比较次数过多。
+            使用双指针，快指针j，慢指针i。让j走，如果集合里不包含
+            当前字符，则加到字符里。如果包含了，直接让慢指针走到下
+            标为重复字符的下标加1。但是如果重复在慢指针指的之前出现
+            了，则判断一下有没有必要回去了。即：
+            i被移动到的新位置为max{i, 重复字符出现的位置+1}
+         */
+        if (arr == null || arr.length == 0) {
+            return 0;
+        }
+        int res = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0, j = 0; j < arr.length; j++) {
+            if (map.containsKey(arr[j])) {
+                // 移动到新位置，并且判断是否需要往回走
+                i = Math.max(i, map.get(arr[j]) + 1);
+            }
+            map.put(arr[j], j);
+            res = Math.max(res, j - i + 1);
+        }
+        return res;
+    }
+
 }
 
 class ListNode {
