@@ -647,6 +647,39 @@ public class Main {
         return res;
     }
 
+    /**
+     * 22.合并两个有序的数组
+     * <p>
+     * 给出两个有序的整数数组A和B，请将数组B合并到数组A中，变成一个有序的数组
+     * 注意：
+     * 可以假设A数组有足够的空间存放B数组的元素，A和B中初始的元素数目分别为m和n
+     *
+     * @param A
+     * @param m
+     * @param B
+     * @param n
+     */
+    public void merge(int A[], int m, int B[], int n) {
+        /*
+            算法：由于题目中说A数组有足够的空间存放B数组的元素，所以不必开辟额外空间，直接操作A数组
+            使用双指针。
+            1.使用指针i指向A的m-1，指针j指向B的n-1。两个指针移动前需要定义一个index=m+n-1代表合并
+            数组的最后一个位置
+            2.然后进行指针移动，A[i]和B[j]哪个大，就合并哪个。即将该元素放到index位置上。然后index--
+            3.最后需要判断B是否合并完成，如果没有合并完，则将B直接放进A
+         */
+        int i = m - 1, j = n - 1;
+        int index = m + n - 1;
+        // 步骤2
+        while (i >= 0 && j >= 0) {
+            A[index--] = A[i] > B[j] ? A[i--] : B[j--];
+        }
+        // 步骤3
+        while (j >= 0) {
+            A[index--] = B[j--];
+        }
+    }
+
 }
 
 class ListNode {
