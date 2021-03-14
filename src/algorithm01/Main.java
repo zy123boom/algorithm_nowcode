@@ -680,6 +680,55 @@ public class Main {
         }
     }
 
+    /**
+     * 3.链表中环的入口节点
+     * <p>
+     * 对于一个给定的链表，返回环的入口节点，如果没有环，返回null
+     * 拓展：
+     * 你能给出不利用额外空间的解法么？
+     *
+     * @param head
+     * @return
+     */
+    public ListNode detectCycle(ListNode head) {
+        /*
+            算法一：使用set，入口节点即为会重复的节点
+         */
+        /*HashSet<ListNode> set = new HashSet<>();
+        while (head != null) {
+            if (set.contains(head)) {
+                return head;
+            }
+            set.add(head);
+            head = head.next;
+        }
+        return null;*/
+
+        /*
+            算法二：快慢指针判环，如果有环，则让fast指针回到开头，变为每次走一步，
+            然后两个指针一起走，相遇处就是入环节点
+         */
+        if (head == null || head.next == null || head.next.next == null) {
+            return null;
+        }
+        ListNode slow = head.next;
+        ListNode fast = head.next.next;
+        while (slow != fast) {
+            if (fast.next == null || fast.next.next == null) {
+                return null;
+            }
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        // 有环，让fast指针回到开头然后两个指针一起走
+        fast = head;
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return slow;
+    }
+
 }
 
 class ListNode {
