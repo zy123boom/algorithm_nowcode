@@ -729,6 +729,62 @@ public class Main {
         return slow;
     }
 
+    /**
+     * 52.括号序列
+     * <p>
+     * 给出一个仅包含字符'(',')','{','}','['和']',的字符串，判断给出的字符串是否是合法的括号序列
+     * 括号必须以正确的顺序关闭，"()"和"()[]{}"都是合法的括号序列，但"(]"和"([)]"不合法。
+     *
+     * @param s
+     * @return
+     */
+    public boolean isValid(String s) {
+        if (s == null || "".equals(s)) {
+            return false;
+        }
+        Stack<Character> stack = new Stack<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(' || s.charAt(i) == '[' || s.charAt(i) == '{') {
+                stack.push(s.charAt(i));
+            } else if (s.charAt(i) == ')' || s.charAt(i) == ']' || s.charAt(i) == '}') {
+                if (stack.isEmpty()) {
+                    return false;
+                }
+                char curr = stack.pop();
+                if (curr == '(' && s.charAt(i) != ')') {
+                    return false;
+                }
+                if (curr == '[' && s.charAt(i) != ']') {
+                    return false;
+                }
+                if (curr == '{' && s.charAt(i) != '}') {
+                    return false;
+                }
+            }
+        }
+        return stack.isEmpty();
+    }
+
+    /**
+     * 1.大数加法
+     * <p>
+     * 以字符串的形式读入两个数字，编写一个函数计算它们的和，以字符串形式返回。
+     * （字符串长度不大于100000，保证字符串仅由'0'~'9'这10种字符组成）
+     * <p>
+     * eg:
+     * 输入 "1","99"
+     * 输出 "100"
+     *
+     * @param s
+     * @param t
+     * @return
+     */
+    public String solve(String s, String t) {
+        // write code here
+        // TODO
+        return null;
+    }
+
 }
 
 class ListNode {
