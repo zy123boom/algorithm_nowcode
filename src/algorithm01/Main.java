@@ -780,9 +780,80 @@ public class Main {
      * @return
      */
     public String solve(String s, String t) {
-        // write code here
-        // TODO
-        return null;
+        /*
+            算法：
+            1.首先保证s是长的字符串，如果不是交换两个字符串
+            2.new一个StringBuilder保存结果。获取两个字符串长度，记作shortLen, longLen。设置进位carry
+            3.做循环的逐位计算和，条件是从0~shortLen。然后获取每一位的值的和加上carry，然后变换carry为下一次循环准备
+            4.做循环，条件从短长长度~longLen，取长串s的当前位和carry,变换carry为下一次循环准备
+            5.最后判断carry是否为0，不为0则加入到结果中。最终反转StringBuilder即可。
+            注明：获取每一个字符的数字值是  cr - '0'。每一位是length - 1 - i
+         */
+        if (s == null || "".equals(s)) {
+            return t;
+        }
+        if (t == null || "".equals(t)) {
+            return s;
+        }
+        StringBuilder ans = new StringBuilder();
+        if (s.length() < t.length()) {
+            String temp = s;
+            s = t;
+            t = temp;
+        }
+        int longLen = s.length();
+        int shortLen = t.length();
+        int carry = 0;
+        for (int i = 0; i < shortLen; i++) {
+            int sum = (s.charAt(longLen - 1 - i) - '0') + (t.charAt(shortLen - 1 - i) - '0') + carry;
+            ans.append(sum % 10);
+            carry = sum / 10;
+        }
+        for (int i = shortLen; i < longLen; i++) {
+            int sum = s.charAt(longLen - 1 - i) - '0' + carry;
+            ans.append(sum % 10);
+            carry = sum / 10;
+        }
+        if (carry != 0) {
+            ans.append(carry);
+        }
+        return ans.reverse().toString();
+    }
+
+    /**
+     * 53.删除链表的倒数第n个节点
+     * <p>
+     * 给定一个链表，删除链表的倒数第n个节点并返回链表的头指针
+     * 例如：
+     * 给出的链表为:1->2->3->4->5, n= 2.
+     * 删除了链表的倒数第n个节点之后,链表变为1->2->3->5.
+     * 备注：
+     * 题目保证n一定是有效的
+     * 请给出请给出时间复杂度为O(n)的算法
+     *
+     * @param head
+     * @param n
+     * @return
+     */
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        /*
+            算法：快慢指针法。
+            首先让快指针移动n个位置，然后同时移动快慢指针，此时慢指针指向要
+            移除的前一个元素，然后删除这个元素，即node.next = node.next.next
+         */
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode fast = dummy;
+        ListNode slow = dummy;
+        for (int i = 0; i < n; i++) {
+            fast = fast.next;
+        }
+        while (fast.next != null) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+        slow.next = slow.next.next;
+        return dummy.next;
     }
 
 }
