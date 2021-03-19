@@ -856,6 +856,99 @@ public class Main {
         return dummy.next;
     }
 
+    /**
+     * 127.最长公共子串
+     * <p>
+     * 给定两个字符串str1和str2,输出两个字符串的最长公共子串
+     * 题目保证str1和str2的最长公共子串存在且唯一。
+     * eg:
+     * 输入"1AB2345CD","12345EF"
+     * 输出"2345"
+     *
+     * @param str1
+     * @param str2
+     * @return
+     */
+    public String LCS(String str1, String str2) {
+        // write code here
+        // TODO
+        return null;
+    }
+
+    /**
+     * 14.二叉树的之字遍历
+     * 给定一个二叉树，返回该二叉树的之字形层序遍历，（第一层从左向右，下一层从右向左，一直这样交替）
+     * <p>
+     * 例如：
+     * 给定的二叉树是{3,9,20,#,#,15,7},
+     * 该二叉树之字形层序遍历的结果是
+     * [
+     * [3],
+     * [20,9],
+     * [15,7]
+     * ]
+     *
+     * @param root
+     * @return
+     */
+    public ArrayList<ArrayList<Integer>> zigzagLevelOrder(TreeNode root) {
+        /*
+            使用两个栈实现
+         */
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
+        // 层数
+        int layer = 1;
+        // 奇数层，正向
+        Stack<TreeNode> stack1 = new Stack<>();
+        // 偶数层，逆向
+        Stack<TreeNode> stack2 = new Stack<>();
+        stack1.push(root);
+        while (!stack1.isEmpty() || !stack2.isEmpty()) {
+            // 奇数
+            if (layer % 2 != 0) {
+                ArrayList<Integer> curr = new ArrayList<>();
+                while (!stack1.isEmpty()) {
+                    TreeNode node = stack1.pop();
+                    if (node != null) {
+                        curr.add(node.val);
+                        if (node.left != null) {
+                            stack2.push(node.left);
+                        }
+                        if (node.right != null) {
+                            stack2.push(node.right);
+                        }
+                    }
+                }
+                if (!curr.isEmpty()) {
+                    res.add(curr);
+                    layer++;
+                }
+            } else {
+                // 偶数
+                ArrayList<Integer> curr = new ArrayList<>();
+                while (!stack2.isEmpty()) {
+                    TreeNode node = stack2.pop();
+                    if (node != null) {
+                        curr.add(node.val);
+                        if (node.right != null) {
+                            stack1.push(node.right);
+                        }
+                        if (node.left != null) {
+                            stack1.push(node.left);
+                        }
+                    }
+                }
+                if (!curr.isEmpty()) {
+                    res.add(curr);
+                    layer++;
+                }
+            }
+        }
+        return res;
+    }
 }
 
 class ListNode {
