@@ -949,6 +949,60 @@ public class Main {
         }
         return res;
     }
+
+    /**
+     * 40.两个链表生成相加链表
+     * <p>
+     * 假设链表中每一个节点的值都在 0 - 9 之间，那么链表整体就可以代表一个整数。
+     * 给定两个这种链表，请生成代表两个整数相加值的结果链表。
+     * 例如：链表 1 为 9->3->7，链表 2 为 6->3，最后生成新的结果链表为 1->0->0->0。
+     *
+     * @param head1
+     * @param head2
+     * @return
+     */
+    public ListNode addInList(ListNode head1, ListNode head2) {
+        /*
+            三个阶段。第一是处理两个链表都有的公共部分。例如例子中 3 -> 7和6 -> 3
+            第二是处理一个有一个没有的，例如例子中的链表1的 9
+            第三是处理最后可能出现进位的carry。
+            其中，对于第一阶段：
+            当前位sum = l1 + l2 + carry
+            当前位val = sum % 10
+            carry = sum / 10
+
+            对于第二阶段：
+            当前位sum = l1 + carry
+            当前位val = sum % 10
+            carry = sum / 10
+
+            对于第三阶段：
+            如果carry = 1, new一个新节点，值为1
+         */
+        ListNode dummy = new ListNode(0);
+        int sum = 0;
+        ListNode cur = dummy;
+        ListNode p1 = head1, p2 = head2;
+        while (p1 != null || p2 != null) {
+            if (p1 != null) {
+                sum += p1.val;
+                p1 = p1.next;
+            }
+            if (p2 != null) {
+                sum += p2.val;
+                p2 = p2.next;
+            }
+            cur.next = new ListNode(sum % 10);
+            sum /= 10;
+            cur = cur.next;
+        }
+
+        if (sum == 1) {
+            cur.next = new ListNode(1);
+        }
+
+        return dummy.next;
+    }
 }
 
 class ListNode {
