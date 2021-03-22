@@ -1003,6 +1003,48 @@ public class Main {
 
         return dummy.next;
     }
+
+    /**
+     * 102.最近公共祖先
+     * <p>
+     * 给定一棵二叉树以及这棵树上的两个节点 o1 和 o2，请找到 o1 和 o2 的最近公共祖先节点。
+     * 输入：
+     * [3,5,1,6,2,0,8,#,#,7,4],5,1
+     * 输出：
+     * 3
+     *
+     * @param root
+     * @param o1
+     * @param o2
+     * @return
+     */
+    public int lowestCommonAncestor(TreeNode root, int o1, int o2) {
+        /*
+            最近公共祖先和o1,o2有三种关系：
+
+            o1,o2分别在祖先左右两侧
+            祖先是o1，o2在祖先左/右侧
+            祖先是o2，o1在祖先左/右侧
+            使用dfs深度遍历，如果节点为o1,o2中其中一个直接返回，如果节点超过叶子节点也返回
+         */
+        return commonAncestor(root, o1, o2).val;
+    }
+
+    private TreeNode commonAncestor(TreeNode root, int o1, int o2) {
+        // 如果节点为o1,o2中其中一个直接返回，节点超过叶子节点也返回
+        if (root == null || root.val == o1 || root.val == o2) {
+            return root;
+        }
+        TreeNode left = commonAncestor(root.left, o1, o2);
+        TreeNode right = commonAncestor(root.right, o1, o2);
+        if (left == null) {
+            return right;
+        }
+        if (right == null) {
+            return left;
+        }
+        return root;
+    }
 }
 
 class ListNode {
