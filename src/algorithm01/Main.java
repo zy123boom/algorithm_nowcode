@@ -1045,6 +1045,60 @@ public class Main {
         }
         return root;
     }
+
+    /**
+     * 38.螺旋矩阵
+     * <p>
+     * 给定一个m x n大小的矩阵（m行，n列），按螺旋的顺序返回矩阵中的所有元素。
+     * eg:
+     * 输入[[1,2,3],[4,5,6],[7,8,9]]
+     * 输出[1,2,3,6,9,8,7,4,5]
+     *
+     * @param matrix
+     * @return
+     */
+    public ArrayList<Integer> spiralOrder(int[][] matrix) {
+        ArrayList<Integer> res = new ArrayList<>();
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return res;
+        }
+        int top = 0, bottom = matrix.length - 1;
+        int left = 0, right = matrix[0].length - 1;
+        while (top < bottom && left < right) {
+            for (int i = left; i < right; i++) {
+                res.add(matrix[top][i]);
+            }
+            for (int i = top; i < bottom; i++) {
+                res.add(matrix[i][right]);
+            }
+            for (int i = right; i > left; i--) {
+                res.add(matrix[bottom][i]);
+            }
+            for (int i = bottom; i > top; i--) {
+                res.add(matrix[i][left]);
+            }
+            top++;
+            right--;
+            bottom--;
+            left++;
+        }
+
+        // 特殊情况：只剩一行或者一列（含只剩一个的情况）
+        if (top == bottom) {
+            for (int i = left; i <= right; i++) {
+                res.add(matrix[top][i]);
+            }
+            return res;
+        }
+        if (left == right) {
+            for (int i = top; i <= bottom; i++) {
+                res.add(matrix[i][left]);
+            }
+            return res;
+        }
+
+        return res;
+    }
 }
 
 class ListNode {
