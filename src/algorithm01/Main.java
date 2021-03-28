@@ -1099,6 +1099,81 @@ public class Main {
 
         return res;
     }
+
+    /**
+     * 65.斐波那契数列
+     *
+     * @param n
+     * @return
+     */
+    public int Fibonacci(int n) {
+        if (n <= 1) {
+            return n;
+        }
+        int a = 0, b = 1;
+        int c = 0;
+        for (int i = 2; i <= n; i++) {
+            c = a + b;
+            a = b;
+            b = c;
+        }
+        return c;
+    }
+
+    /**
+     * 17.最长回文子串
+     *
+     * 对于一个字符串，请设计一个高效算法，计算其中最长回文子串的长度。
+     * 给定字符串A以及它的长度n，请返回最长回文子串的长度。
+     * eg:
+     * 输入："abc1234321ab",12
+     * 输出：7
+     *
+     * @param A
+     * @param n
+     * @return
+     */
+    public int getLongestPalindrome(String A, int n) {
+        /*
+            中心扩散。分为A为奇数个数和偶数个数两种。如果是奇数，左是i-1,右是i+1.
+            如果是偶数，左是i,右是i+1
+         */
+        if (A == null || n == 0) {
+            return 0;
+        }
+        int max = 0;
+        // 最终子串的左右边界
+        int ll = 0, rr = 0;
+        for (int i = 0; i < n; i++) {
+            // 奇数情况
+            int l = i - 1;
+            int r = i + 1;
+            while (l >= 0 && r < n && A.charAt(l) == A.charAt(r)) {
+                int len = r - l + 1;
+                if (len > max) {
+                    max = len;
+                    ll = l;
+                    rr = r;
+                }
+                l--;
+                r++;
+            }
+            // 偶数情况，即奇数情况的while不满足
+            l = i;
+            r = i + 1;
+            while (l >= 0 && r < n && A.charAt(l) == A.charAt(r)) {
+                int len = r - l + 1;
+                if (len > max) {
+                    max = len;
+                    ll = l;
+                    rr = r;
+                }
+                l--;
+                r++;
+            }
+        }
+        return A.substring(ll, rr + 1).length();
+    }
 }
 
 class ListNode {
