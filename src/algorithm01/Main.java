@@ -1174,6 +1174,44 @@ public class Main {
         }
         return A.substring(ll, rr + 1).length();
     }
+
+    /**
+     * 54.数组中相加和为0的三元组
+     *
+     * 给出一个有n个元素的数组S，S中是否有元素a,b,c满足a+b+c=0？找出数组S中所有满足条件的三元组。
+     * 注意：
+     * 三元组（a、b、c）中的元素必须按非降序排列。（即a≤b≤c）
+     * 解集中不能包含重复的三元组。
+     * 例如，给定的数组 S = {-10 0 10 20 -10 -40},解集为(-10, 0, 10) (-10, -10, 20)
+     *
+     * @param num
+     * @return
+     */
+    public ArrayList<ArrayList<Integer>> threeSum(int[] num) {
+        Arrays.sort(num);
+        int n = num.length;
+        Set<ArrayList<Integer>> set = new HashSet<>();
+        for (int i = 0; i < n; i++) {
+            int l = i + 1;
+            int r = n - 1;
+            while (l < r) {
+                if (num[i] + num[l] + num[r] == 0) {
+                    ArrayList<Integer> temp = new ArrayList<>();
+                    temp.add(num[i]);
+                    temp.add(num[l]);
+                    temp.add(num[r]);
+                    set.add(temp);
+                    l++;
+                    r--;
+                } else if (num[i] + num[l] + num[r] < 0) {
+                    l++;
+                } else {
+                    r--;
+                }
+            }
+        }
+        return new ArrayList<>(set);
+    }
 }
 
 class ListNode {
