@@ -1188,29 +1188,57 @@ public class Main {
      * @return
      */
     public ArrayList<ArrayList<Integer>> threeSum(int[] num) {
+        /*
+            思路：
+            （1）首先对数组进行排序（从小到大）
+            （2）依次取出第 i 个数（i从0开始），并且不重复的选取（跳过重复的数）
+            （3）这样问题就转换为 2 个数求和的问题（可以用双指针解决方法）
+            ==》数求和问题
+            （4）定义两个指针：左指针（left） 和 右指针（right）
+            （5）找出固定 left， 此时left所指的位置为数组中最小数，再找到两个数和 不大于 target 的最大 right 的位置
+            （6）调整 left 的位置（后移），求解和是否为 target O(n)
+            ==》时间复杂度：O(nlogn) + O(n)
+         */
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+        if (num == null || num.length < 3) {
+            return res;
+        }
         Arrays.sort(num);
-        int n = num.length;
-        Set<ArrayList<Integer>> set = new HashSet<>();
-        for (int i = 0; i < n; i++) {
-            int l = i + 1;
-            int r = n - 1;
-            while (l < r) {
-                if (num[i] + num[l] + num[r] == 0) {
-                    ArrayList<Integer> temp = new ArrayList<>();
-                    temp.add(num[i]);
-                    temp.add(num[l]);
-                    temp.add(num[r]);
-                    set.add(temp);
-                    l++;
-                    r--;
-                } else if (num[i] + num[l] + num[r] < 0) {
-                    l++;
+        for (int i = 0; i < num.length - 2; i++) {
+            // 如果当前数字大于0，且数组已经排过序，则三数之和一定大于0，所以结束循环
+            if (num[i] > 0) {
+                break;
+            }
+            // 去重
+            if (i > 0 && num[i] == num[i - 1]) {
+                continue;
+            }
+            int left = i + 1;
+            int right = num.length - 1;
+            while (left < right) {
+                int sum = num[i] + num[left] + num[right];
+                if (sum == 0) {
+                    ArrayList<Integer> curr = new ArrayList<>();
+                    curr.add(num[i]);
+                    curr.add(num[left]);
+                    curr.add(num[right]);
+                    res.add(curr);
+                    while (left < right && num[left] == num[left + 1]) {
+                        left++;
+                    }
+                    while (left < right && num[right] == num[right - 1]) {
+                        right--;
+                    }
+                    left++;
+                    right--;
+                } else if (sum > 0) {
+                    right--;
                 } else {
-                    r--;
+                    left++;
                 }
             }
         }
-        return new ArrayList<>(set);
+        return res;
     }
 }
 
