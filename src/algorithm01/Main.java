@@ -1122,7 +1122,7 @@ public class Main {
 
     /**
      * 17.最长回文子串
-     *
+     * <p>
      * 对于一个字符串，请设计一个高效算法，计算其中最长回文子串的长度。
      * 给定字符串A以及它的长度n，请返回最长回文子串的长度。
      * eg:
@@ -1177,7 +1177,7 @@ public class Main {
 
     /**
      * 54.数组中相加和为0的三元组
-     *
+     * <p>
      * 给出一个有n个元素的数组S，S中是否有元素a,b,c满足a+b+c=0？找出数组S中所有满足条件的三元组。
      * 注意：
      * 三元组（a、b、c）中的元素必须按非降序排列。（即a≤b≤c）
@@ -1239,6 +1239,53 @@ public class Main {
             }
         }
         return res;
+    }
+
+    /**
+     * 12.重建二叉树
+     * <p>
+     * 输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序
+     * 遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}
+     * 和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
+     *
+     * @param pre
+     * @param in
+     * @return
+     */
+    public TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+        /*
+            第一步：获取根节点
+            第二步：构建left左子树和right右子树，递归构建。
+            root.left = reConstructBinaryTree(左子树的前序数组，左子树的中序数组)
+            root.right = reConstructBinaryTree(右子树的前序数组，右子树的中序数组)
+                其中，构建的时候先找到根节点在中序数组中的位置，这样就可知道左子树和右子树在数组中是什么，
+                然后就可以根据这个信息在前序遍历的数组中找到对应的左子树和右子树。
+         */
+        if (pre == null || pre.length == 0) {
+            return null;
+        }
+
+        // 1.获取根节点
+        TreeNode root = new TreeNode(pre[0]);
+        // 2.1 获取根节点在中序数组中的位置
+        int index = findIndex(pre, in);
+
+        // 2.2构建左子树和右子树
+        root.left = reConstructBinaryTree(Arrays.copyOfRange(pre, 1, index + 1),
+                Arrays.copyOfRange(in, 0, index));
+        root.right = reConstructBinaryTree(Arrays.copyOfRange(pre, index + 1, pre.length),
+                Arrays.copyOfRange(in, index + 1, in.length));
+        // 3.返回
+        return root;
+    }
+
+    private int findIndex(int[] pre, int[] in) {
+        for (int i = 0; i < in.length; i++) {
+            if (in[i] == pre[0]) {
+                return i;
+            }
+        }
+        return 0;
     }
 }
 
