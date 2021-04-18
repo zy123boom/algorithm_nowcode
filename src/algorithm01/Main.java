@@ -1287,6 +1287,41 @@ public class Main {
         }
         return 0;
     }
+
+    /**
+     * 32.求平方根
+     *
+     * 实现函数 int sqrt(int x).
+     * 计算并返回x的平方根（向下取整）
+     *
+     * @param x
+     * @return
+     */
+    public int sqrt(int x) {
+        // 二分
+        if (x <= 0) {
+            return 0;
+        }
+        int magicNum = (int) Math.sqrt(Integer.MAX_VALUE);
+        int start = 0, end = magicNum;
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            if (mid * mid == x) {
+                return mid;
+            }
+            if (mid * mid > x) {
+                end = mid;
+            } else {
+                start = mid;
+            }
+        }
+
+        if (end * end == x) {
+            return end;
+        } else {
+            return start;
+        }
+    }
 }
 
 class ListNode {
