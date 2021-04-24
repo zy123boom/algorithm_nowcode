@@ -2,6 +2,7 @@ package algorithm01;
 
 
 import algorithm01.algorithm.LruCache;
+import algorithm01.algorithm.MinStack;
 
 import java.util.*;
 
@@ -1290,7 +1291,7 @@ public class Main {
 
     /**
      * 32.求平方根
-     *
+     * <p>
      * 实现函数 int sqrt(int x).
      * 计算并返回x的平方根（向下取整）
      *
@@ -1321,6 +1322,50 @@ public class Main {
         } else {
             return start;
         }
+    }
+
+    /**
+     * 90.设计getMin功能的栈
+     * <p>
+     * 实现一个特殊功能的栈，在实现栈的基本功能的基础上，再实现返回栈中最小元素的操作。
+     * eg:
+     * 输入[[1,3],[1,2],[1,1],[3],[2],[3]]
+     * 输出[1,2]
+     * <p>
+     * 有三种操作种类，op1表示push，op2表示pop，op3表示getMin。你需要返回和op3出现次数一样多的数组，
+     * 表示每次getMin的答案
+     * <p>
+     * 1<=操作总数<=1000000
+     * -1000000<=每个操作数<=1000000
+     * 数据保证没有不合法的操作
+     *
+     * @param op
+     * @return
+     */
+    public int[] getMinStack(int[][] op) {
+        int len = 0;
+        for (int i = 0; i < op.length; i++) {
+            if (op[i][0] == 3) {
+                len++;
+            }
+        }
+        int[] res = new int[len];
+        MinStack minStack = new MinStack();
+        int index = 0;
+        for (int i = 0; i < op.length; i++) {
+            if (op[i][0] == 1) {
+                minStack.push(op[i][1]);
+                continue;
+            }
+            if (op[i][0] == 2) {
+                minStack.pop();
+                continue;
+            }
+            if (op[i][0] == 3) {
+                res[index++] = minStack.getMin();
+            }
+        }
+        return res;
     }
 }
 
