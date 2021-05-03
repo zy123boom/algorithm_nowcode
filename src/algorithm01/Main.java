@@ -1494,6 +1494,29 @@ public class Main {
         }
         return res.stream().mapToInt(Integer::valueOf).toArray();
     }
+
+    /**
+     * 7.买卖股票的最好时机
+     *
+     * 假设你有一个数组，其中第i个元素是股票在第i天的价格。
+     * 你有一次买入和卖出的机会。（只有买入了股票以后才能卖出）。请你设
+     * 计一个算法来计算可以获得的最大收益。
+     *
+     * @param prices
+     * @return
+     */
+    public int maxProfit(int[] prices) {
+        int minPrice = Integer.MAX_VALUE;
+        int maxProfit = 0;
+        for (int i = 0; i < prices.length; i++) {
+            if (prices[i] < minPrice) {
+                minPrice = prices[i];
+            } else if (prices[i] - minPrice > maxProfit) {
+                maxProfit = prices[i] - minPrice;
+            }
+        }
+        return maxProfit;
+    }
 }
 
 class ListNode {
