@@ -1404,6 +1404,96 @@ public class Main {
         }
         return res;
     }
+
+    /**
+     * 136.输出二叉树的右视图
+     * <p>
+     * 请根据二叉树的前序遍历，中序遍历恢复二叉树，并打印出二叉树的右视图
+     * 输入：[1,2,4,5,3],[4,2,5,1,3]
+     * 输出：[1,3,5]
+     *
+     * @param xianxu
+     * @param zhongxu
+     * @return
+     */
+    public int[] solve(int[] xianxu, int[] zhongxu) {
+        /*
+            1.构建二叉树
+            2.层次遍历
+         */
+        TreeNode head = reConstructBinaryTree2(xianxu, zhongxu);
+        return buildRightSideView(head);
+    }
+
+    /**
+     * 136帮助函数 构建二叉树
+     *
+     * @param xianxu
+     * @param zhongxu
+     * @return
+     */
+    private TreeNode reConstructBinaryTree2(int[] xianxu, int[] zhongxu) {
+//        reConstructBinaryTree(xianxu, zhongxu);
+        /*
+            第一步：获取根节点
+            第二步：构建left左子树和right右子树，递归构建。
+            root.left = reConstructBinaryTree(左子树的前序数组，左子树的中序数组)
+            root.right = reConstructBinaryTree(右子树的前序数组，右子树的中序数组)
+                其中，构建的时候先找到根节点在中序数组中的位置，这样就可知道左子树和右子树在数组中是什么，
+                然后就可以根据这个信息在前序遍历的数组中找到对应的左子树和右子树。
+         */
+        if (xianxu == null || xianxu.length == 0) {
+            return null;
+        }
+        TreeNode root = new TreeNode(xianxu[0]);
+        int index = findIndex2(xianxu, zhongxu);
+
+        root.left = reConstructBinaryTree2(Arrays.copyOfRange(xianxu, 1, index + 1),
+                Arrays.copyOfRange(zhongxu, 0, index));
+        root.right = reConstructBinaryTree2(Arrays.copyOfRange(xianxu, index + 1, xianxu.length),
+                Arrays.copyOfRange(zhongxu, index + 1, zhongxu.length));
+        return root;
+    }
+
+    private int findIndex2(int[] xianxu, int[] zhongxu) {
+        for (int i = 0; i < zhongxu.length; i++) {
+            if (zhongxu[i] == xianxu[0]) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * 136帮助函数，构建右视图
+     *
+     * @param head
+     * @return
+     */
+    private int[] buildRightSideView(TreeNode head) {
+        List<Integer> res = new ArrayList<>();
+        if (head == null) {
+            return new int[0];
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(head);
+        while (!queue.isEmpty()) {
+            TreeNode temp = head;
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                temp = queue.poll();
+                if (temp.left != null) {
+                    queue.offer(temp.left);
+                }
+                if (temp.right != null) {
+                    queue.offer(temp.right);
+                }
+            }
+            // 添加每层最右元素
+            res.add(temp.val);
+        }
+        return res.stream().mapToInt(Integer::valueOf).toArray();
+    }
 }
 
 class ListNode {
