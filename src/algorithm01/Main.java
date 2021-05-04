@@ -1519,24 +1519,6 @@ public class Main {
     }
 
     /**
-     * 51.合并K个排序链表
-     * <p>
-     * 合并k个已排序的链表并将其作为一个已排序的链表返回。分析并描述其复杂度。
-     * eg:
-     * 输入[{1,2,3},{4,5,6,7}]
-     * 输出{1,2,3,4,5,6,7}
-     *
-     * @param lists
-     * @return
-     */
-    public ListNode mergeKLists(ArrayList<ListNode> lists) {
-        /*
-            分治思想，先分开，到不能分的时候，然后做合并两个有序链表的操作。
-         */
-        return merge(lists, 0, lists.size() - 1);
-    }
-
-    /**
      * 51.合并K个排序链表(优先队列解法)
      *
      * @param lists
@@ -1570,6 +1552,24 @@ public class Main {
         }
 
         return dummy.next;
+    }
+
+    /**
+     * 51.合并K个排序链表
+     * <p>
+     * 合并k个已排序的链表并将其作为一个已排序的链表返回。分析并描述其复杂度。
+     * eg:
+     * 输入[{1,2,3},{4,5,6,7}]
+     * 输出{1,2,3,4,5,6,7}
+     *
+     * @param lists
+     * @return
+     */
+    public ListNode mergeKLists(ArrayList<ListNode> lists) {
+        /*
+            分治思想，先分开，到不能分的时候，然后做合并两个有序链表的操作。
+         */
+        return merge(lists, 0, lists.size() - 1);
     }
 
     private ListNode merge(ArrayList<ListNode> lists, int left, int right) {
