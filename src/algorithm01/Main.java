@@ -1517,6 +1517,73 @@ public class Main {
         }
         return maxProfit;
     }
+
+    /**
+     * 51.合并K个排序链表
+     * <p>
+     * 合并k个已排序的链表并将其作为一个已排序的链表返回。分析并描述其复杂度。
+     * eg:
+     * 输入[{1,2,3},{4,5,6,7}]
+     * 输出{1,2,3,4,5,6,7}
+     *
+     * @param lists
+     * @return
+     */
+    public ListNode mergeKLists(ArrayList<ListNode> lists) {
+        /*
+            分治思想，先分开，到不能分的时候，然后做合并两个有序链表的操作。
+         */
+        return merge(lists, 0, lists.size() - 1);
+    }
+
+    /**
+     * 51.合并K个排序链表(优先队列解法)
+     *
+     * @param lists
+     * @return
+     */
+    public ListNode mergeKListsByPriorityQueue(ArrayList<ListNode> lists) {
+        /*
+            使用优先队列，设置dummy。首先将lists中所有链表的第一个节点放入优先队列。
+            然后当队列不为空时出队，此时出队元素就是最小的。然后指针指向下一个，然后判断出队的node.next是否
+            为空，不为空则入队node.next
+         */
+        ListNode dummy = new ListNode(0);
+        if (lists == null || lists.size() == 0) {
+            return dummy.next;
+        }
+        ListNode current = dummy;
+        PriorityQueue<ListNode> priorityQueue = new PriorityQueue<>((o1, o2) -> o1.val - o2.val);
+        for (ListNode node : lists) {
+            if (node != null) {
+                priorityQueue.add(node);
+            }
+        }
+
+        while (!priorityQueue.isEmpty()) {
+            ListNode node = priorityQueue.poll();
+            current.next = node;
+            current = current.next;
+            if (node.next != null) {
+                priorityQueue.add(node.next);
+            }
+        }
+
+        return dummy.next;
+    }
+
+    private ListNode merge(ArrayList<ListNode> lists, int left, int right) {
+        // base case
+        if (left == right) {
+            return lists.get(left);
+        }
+        if (left > right) {
+            return null;
+        }
+
+        int mid = left + (right - left) / 2;
+        return mergeTwoLists(merge(lists, left, mid), merge(lists, mid + 1, right));
+    }
 }
 
 class ListNode {
