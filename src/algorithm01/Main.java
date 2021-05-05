@@ -1584,6 +1584,50 @@ public class Main {
         int mid = left + (right - left) / 2;
         return mergeTwoLists(merge(lists, left, mid), merge(lists, mid + 1, right));
     }
+
+    /**
+     * 121.字符串的排列
+     * <p>
+     * 题目描述
+     * 输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则按字典序打印出
+     * 由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。
+     * <p>
+     * eg:
+     * 输入"ab"
+     * 输出["ab","ba"]
+     *
+     * @param str
+     * @return
+     */
+    public ArrayList<String> Permutation(String str) {
+        // 全排列
+        if (str == null || "".equals(str)) {
+            return new ArrayList<>();
+        }
+        char[] charArr = str.toCharArray();
+        Set<String> set = new HashSet<>();
+        helper(set, new StringBuilder(), charArr, new boolean[charArr.length]);
+        ArrayList<String> res = new ArrayList<>(set);
+        Collections.sort(res);
+        return res;
+    }
+
+    private void helper(Set<String> res, StringBuilder sb, char[] charArr, boolean[] visited) {
+        if (sb.length() == charArr.length) {
+            res.add(sb.toString());
+            return;
+        }
+        for (int i = 0; i < charArr.length; i++) {
+            if (visited[i]) {
+                continue;
+            }
+            visited[i] = true;
+            sb.append(charArr[i]);
+            helper(res, sb, charArr, visited);
+            sb.deleteCharAt(sb.length() - 1);
+            visited[i] = false;
+        }
+    }
 }
 
 class ListNode {
