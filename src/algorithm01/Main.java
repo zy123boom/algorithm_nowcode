@@ -1497,7 +1497,7 @@ public class Main {
 
     /**
      * 7.买卖股票的最好时机
-     *
+     * <p>
      * 假设你有一个数组，其中第i个元素是股票在第i天的价格。
      * 你有一次买入和卖出的机会。（只有买入了股票以后才能卖出）。请你设
      * 计一个算法来计算可以获得的最大收益。
@@ -1628,6 +1628,58 @@ public class Main {
             visited[i] = false;
         }
     }
+
+    // 109题
+    private int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    /**
+     * 109.判断岛屿数量
+     * <p>
+     * 给一个01矩阵，1代表是陆地，0代表海洋， 如果两个1相邻，那么这两个1属于同一个岛。我们只考虑上下左右为相邻。
+     * 岛屿: 相邻陆地可以组成一个岛屿（相邻:上下左右） 判断岛屿个数。
+     * <p>
+     * eg:
+     * 输入
+     * [
+     * [1,1,0,0,0],
+     * [0,1,0,1,1],
+     * [0,0,0,1,1],
+     * [0,0,0,0,0],
+     * [0,0,1,1,1]
+     * ]
+     * 输出3
+     *
+     * @param grid char字符型二维数组
+     * @return int整型
+     */
+    public int solve(char[][] grid) {
+        // dfs
+        if (grid == null || grid.length == 0 || grid[0].length == 0) {
+            return 0;
+        }
+        int res = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] != '0') {
+                    dfs(grid, i, j);
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+
+    private void dfs(char[][] grid, int row, int column) {
+        if (row < 0 || row >= grid.length || column < 0 || column >= grid[0].length || grid[row][column] == '0') {
+            return;
+        }
+
+        grid[row][column] = '0';
+        for (int[] d : direction) {
+            dfs(grid, row + d[0], column + d[1]);
+        }
+    }
+
+
 }
 
 class ListNode {
