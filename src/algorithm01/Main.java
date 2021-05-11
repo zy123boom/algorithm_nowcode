@@ -1679,7 +1679,83 @@ public class Main {
         }
     }
 
+    /**
+     * 13.二叉树的最大深度
+     * <p>
+     * 求给定二叉树的最大深度，
+     * 最大深度是指树的根结点到最远叶子结点的最长路径上结点的数量。
+     *
+     * @param root
+     * @return
+     */
+    public int maxDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int leftDepth = maxDepth(root.left);
+        int rightDepth = maxDepth(root.right);
+        return Math.max(leftDepth, rightDepth) + 1;
+    }
 
+    /**
+     * 70.链表排序
+     * <p>
+     * 给定一个无序单链表，实现单链表的排序(按升序排序)。
+     *
+     * @param head
+     * @return
+     */
+    public ListNode sortInList(ListNode head) {
+        /*
+            1.快慢指针法找中点
+            2.归并排序
+         */
+        return mergeSort(head);
+    }
+
+    private ListNode mergeSort(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        // 1.
+        ListNode fast = dummy;
+        ListNode slow = dummy;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+
+        ListNode head2 = slow.next;
+        slow.next = null;
+        head = mergeSort(head);
+        head2 = mergeSort(head2);
+        return merge(head, head2);
+    }
+
+    private ListNode merge(ListNode head1, ListNode head2) {
+        ListNode dummy = new ListNode(0);
+        ListNode curr = dummy;
+        while (head1 != null && head2 != null) {
+            if (head1.val < head2.val) {
+                curr.next = head1;
+                curr = curr.next;
+                head1 = head1.next;
+            } else {
+                curr.next = head2;
+                curr = curr.next;
+                head2 = head2.next;
+            }
+        }
+        if (head1 != null) {
+            curr.next = head1;
+        }
+        if (head2 != null) {
+            curr.next = head2;
+        }
+        return dummy.next;
+    }
 }
 
 class ListNode {
