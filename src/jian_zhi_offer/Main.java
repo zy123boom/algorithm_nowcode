@@ -1,0 +1,70 @@
+package jian_zhi_offer;
+
+/**
+ * 剑指offer
+ * 来源：力扣（LeetCode）
+ * 链接：https://leetcode-cn.com/problems/shu-zu-zhong-zhong-fu-de-shu-zi-lcof
+ *
+ * @author boomzy
+ * @date 2021/12/14 22:43
+ */
+public class Main {
+
+    /**
+     * 剑指 Offer 03. 数组中重复的数字
+     * <p>
+     * 在一个长度为 n 的数组 nums 里的所有数字都在 0～n-1 的范围内。数组中某些数字是重复的，
+     * 但不知道有几个数字重复了，也不知道每个数字重复了几次。请找出数组中任意一个重复的数字
+     * <p>
+     * eg:
+     * 输入：
+     * [2, 3, 1, 0, 2, 5, 3]
+     * 输出：2 或 3
+     *
+     * @param nums
+     * @return
+     */
+    public int findRepeatNumber(int[] nums) {
+        /*
+            时间复杂度为O(N)，空间复杂度为O(1)的算法：
+            从头到尾依次扫描这个数组中的数字，当扫描到下标为i的数字时，首先比较这个数字(记为m)是否等于i。如果是则接着扫描
+            下一个数字；如果不是，则再拿这个数和第m个数字进行比较。如果它和第m个数字相等，则就找到了一个重复数字；如果不相等
+            则将第i个和第m个数字交换，接下来继续重复比较并交换的过程即可
+
+            eg:
+            nums=[2, 3, 1, 0, 2, 5, 3]
+            > nums[0]=2记为m, 不等于i=0，将m=2和nums[m]=1比较，不相等，交换。交换后数组[1, 3, 2, 0, 2, 5, 3]
+            > nums[0]=1记为m, 不等于i=0，将m=1和nums[m]=3比较，不相等，交换。交换后数组[3, 1, 2, 0, 2, 5, 3]
+            > nums[0]=3记为m, 不等于i=0，将m=3和nums[m]=0比较，不相等，交换。交换后数组[0, 1, 2, 3, 2, 5, 3]
+            > nums[0]=0记为m, 等于i=0，继续扫描下一个数字，接下来几个数字均相等
+            ...
+            > nums[4]=2记为m, 不等于i=0，将m=2和nums[m]=2比较，相等，说明为重复数字，结束。
+
+            每个数字最多只会交换两次就能找到正确位置，即时间复杂度为O(N)，空间复杂度为O(1)
+
+         */
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] < 0 || nums[i] > nums.length - 1) {
+                return 0;
+            }
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            while (i != nums[i]) {
+                if (nums[i] == nums[nums[i]]) {
+                    return nums[i];
+                }
+                // swap
+                int temp = nums[i];
+                nums[i] = nums[temp];
+                nums[temp] = temp;
+            }
+        }
+
+        return 0;
+    }
+}
