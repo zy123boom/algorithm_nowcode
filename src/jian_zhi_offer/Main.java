@@ -67,4 +67,85 @@ public class Main {
 
         return 0;
     }
+
+    /**
+     * 剑指 Offer 04. 二维数组中的查找
+     * <p>
+     * 在一个 n * m 的二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。
+     * 请完成一个高效的函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
+     * <p>
+     * 示例:
+     * 现有矩阵 matrix 如下：
+     * <p>
+     * [
+     * [1,   4,  7, 11, 15],
+     * [2,   5,  8, 12, 19],
+     * [3,   6,  9, 16, 22],
+     * [10, 13, 14, 17, 24],
+     * [18, 21, 23, 26, 30]
+     * ]
+     * 给定 target = 5，返回 true。
+     * 给定 target = 20，返回 false。
+     *
+     * @param matrix
+     * @param target
+     * @return
+     */
+    public boolean findNumberIn2DArray(int[][] matrix, int target) {
+        /*
+            从右上角开始，如果该数字为要查找的数字，返回true
+            如果该数字大于要查找的数字，则剔除该数字所在的列，即column--
+            如果该数字小于等于要查找的数字，则剔除该数字所在的行，row++
+         */
+        if (matrix == null || matrix.length == 0) {
+            return false;
+        }
+        // begin index
+        int row = 0;
+        int column = matrix[0].length - 1;
+        while (row < matrix.length && column >= 0) {
+            if (matrix[row][column] == target) {
+                return true;
+            }
+            if (matrix[row][column] > target) {
+                column--;
+            } else {
+                row++;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 剑指 Offer 05. 替换空格
+     * <p>
+     * 请实现一个函数，把字符串 s 中的每个空格替换成"%20"。
+     * <p>
+     * 示例 1：
+     * 输入：s = "We are happy."
+     * 输出："We%20are%20happy."
+     * <p>
+     * 限制：
+     * 0 <= s 的长度 <= 10000
+     *
+     * @param s
+     * @return
+     */
+    public String replaceSpace(String s) {
+        if (s == null || "".equals(s)) {
+            return "";
+        }
+
+        int length = s.length();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == ' ') {
+                sb.append("%20");
+            } else {
+                sb.append(s.charAt(i));
+            }
+        }
+        return sb.toString();
+    }
+
 }
