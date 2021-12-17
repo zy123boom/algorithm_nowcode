@@ -1,5 +1,7 @@
 package jian_zhi_offer;
 
+import java.util.Arrays;
+
 /**
  * 剑指offer
  * 来源：力扣（LeetCode）
@@ -148,4 +150,92 @@ public class Main {
         return sb.toString();
     }
 
+    /**
+     * 剑指 Offer 06. 从尾到头打印链表
+     * <p>
+     * 输入一个链表的头节点，从尾到头反过来返回每个节点的值（用数组返回）。
+     *
+     * @param head
+     * @return
+     */
+    public int[] reversePrint(ListNode head) {
+        int count = 0;
+        ListNode curr = head;
+        while (curr != null) {
+            curr = curr.next;
+            count++;
+        }
+        int[] res = new int[count];
+        for (int i = res.length - 1; i >= 0; i--) {
+            res[i] = head.val;
+            head = head.next;
+        }
+        return res;
+    }
+
+    /**
+     * 剑指 Offer 07. 重建二叉树
+     * <p>
+     * 输入某二叉树的前序遍历和中序遍历的结果，请构建该二叉树并返回其根节点。
+     * 假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
+     * <p>
+     * eg:
+     * Input: preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]
+     * Output: [3,9,20,null,null,15,7]
+     * <p>
+     * 限制：
+     * 0 <= 节点个数 <= 5000
+     *
+     * @param preOrder
+     * @param inorder
+     * @return
+     */
+    public TreeNode buildTree(int[] preOrder, int[] inorder) {
+        if (preOrder == null || preOrder.length == 0) {
+            return null;
+        }
+
+        if (preOrder.length > 5000) {
+            return null;
+        }
+
+        TreeNode root = new TreeNode(preOrder[0]);
+
+        int index = findRootIndex(preOrder, inorder);
+
+        root.left = buildTree(Arrays.copyOfRange(preOrder, 1, index + 1),
+                Arrays.copyOfRange(inorder, 0, index));
+        root.right = buildTree(Arrays.copyOfRange(preOrder, index + 1, preOrder.length),
+                Arrays.copyOfRange(inorder, index + 1, inorder.length));
+
+        return root;
+    }
+
+    private int findRootIndex(int[] preOrder, int[] inorder) {
+        for (int i = 0; i < inorder.length; i++) {
+            if (inorder[i] == preOrder[0]) {
+                return i;
+            }
+        }
+        return 0;
+    }
+}
+
+class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode(int x) {
+        val = x;
+    }
+}
+
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int x) {
+        val = x;
+    }
 }
