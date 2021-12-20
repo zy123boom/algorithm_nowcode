@@ -219,6 +219,58 @@ public class Main {
         }
         return 0;
     }
+
+    /**
+     * 剑指 Offer 08. 二叉树的下一个结点
+     *
+     * 给定一个二叉树其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。
+     * 注意，树中的结点不仅包含左右子结点，同时包含指向父结点的next指针
+     *
+     * 示例:
+     * 输入:{8,6,10,5,7,9,11},8
+     * 返回:9
+     * 解析:这个组装传入的子树根节点，其实就是整颗树，中序遍历{5,6,7,8,9,10,11}，
+     * 根节点8的下一个节点就是9，应该返回{9,10,11}，后台只打印子树的下一个节点，所以只会打印9
+     *
+     * @param pNode
+     * @return
+     */
+    public TreeLinkNode GetNext(TreeLinkNode pNode) {
+        if (pNode == null) {
+            return null;
+        }
+        /*
+            两种情况：
+            1.如果一个节点有右子树，由于是中序遍历顺序，那么它的下一个节点就是它的右子树中的左子节点。
+            即从右子节点出发一直沿着指向左子树的指针寻找
+            2.如果一个节点没有右子树，如果节点是它父节点的左子节点，那么它的下一个节点就是父节点
+            3.如果一个节点既没有右子树，也是它父节点的右子节点，需要沿着父节点指针一直遍历，直到找到一个是它父节点的
+            左子节点的节点。
+         */
+        TreeLinkNode pNext = null;
+        // 情况一
+        if (pNode.right != null) {
+            TreeLinkNode pRight = pNode.right;
+            while (pRight.left != null) {
+                pRight = pRight.left;
+            }
+            pNext = pRight;
+            return pNext;
+        }
+
+        // 情况二、三合起来写，因为二算是三的简易情况
+        if (pNode.next != null) {
+            TreeLinkNode current = pNode;
+            TreeLinkNode parent = pNode.next;
+            while (parent != null && current == parent.right) {
+                current = parent;
+                parent = parent.next;
+            }
+            pNext = parent;
+        }
+
+        return pNext;
+    }
 }
 
 class ListNode {
@@ -237,5 +289,16 @@ class TreeNode {
 
     TreeNode(int x) {
         val = x;
+    }
+}
+
+class TreeLinkNode {
+    int val;
+    TreeLinkNode left = null;
+    TreeLinkNode right = null;
+    TreeLinkNode next = null;
+
+    TreeLinkNode(int val) {
+        this.val = val;
     }
 }
