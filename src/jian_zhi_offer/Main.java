@@ -1,6 +1,7 @@
 package jian_zhi_offer;
 
 import java.util.Arrays;
+import java.util.Stack;
 
 /**
  * 剑指offer
@@ -222,10 +223,10 @@ public class Main {
 
     /**
      * 剑指 Offer 08. 二叉树的下一个结点
-     *
+     * <p>
      * 给定一个二叉树其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。
      * 注意，树中的结点不仅包含左右子结点，同时包含指向父结点的next指针
-     *
+     * <p>
      * 示例:
      * 输入:{8,6,10,5,7,9,11},8
      * 返回:9
@@ -270,6 +271,73 @@ public class Main {
         }
 
         return pNext;
+    }
+
+    /**
+     * 剑指 Offer 09. 斐波那契数列
+     * F(0) = 0,   F(1) = 1
+     * F(N) = F(N - 1) + F(N - 2), 其中 N > 1.
+     * <p>
+     * 答案需要取模 1e9+7（1000000007），如计算初始结果为：1000000008，请返回 1。
+     *
+     * @param n
+     * @return
+     */
+    public int fib(int n) {
+        if (n <= 1) {
+            return n;
+        }
+        final int MOD = 1000000007;
+        int fibN = 0;
+        int minusOne = 1; // 前一个数，即f(1)
+        int minusTwo = 0; // 前两个数，即f(0)
+        // 从f(2)开始
+        for (int i = 2; i <= n; i++) {
+            fibN = (minusTwo + minusOne) % MOD;
+            minusTwo = minusOne;
+            minusOne = fibN;
+        }
+        return fibN;
+    }
+}
+
+/**
+ * 剑指 Offer 09. 用两个栈实现队列
+ * <p>
+ * 用两个栈实现一个队列。队列的声明如下，请实现它的两个函数 appendTail 和 deleteHead ，
+ * 分别完成在队列尾部插入整数和在队列头部删除整数的功能。(若队列中没有元素，deleteHead 操作返回 -1 )
+ */
+class CQueue {
+
+    private Stack<Integer> pushStack;
+
+    private Stack<Integer> popStack;
+
+    public CQueue() {
+        pushStack = new Stack<>();
+        popStack = new Stack<>();
+    }
+
+    // 添加元素：直接往插入栈中插入即可
+    public void appendTail(int value) {
+        pushStack.push(value);
+    }
+
+    /**
+     * 删除元素：
+     * 当弹出栈不为空时，直接弹出栈顶。
+     * 当弹出栈为空时，将插入栈的元素不断入栈到弹出栈中。最后返回弹出栈的栈顶
+     *
+     * @return
+     */
+    public int deleteHead() {
+        if (!popStack.isEmpty()) {
+            return popStack.pop();
+        }
+        while (!pushStack.isEmpty()) {
+            popStack.push(pushStack.pop());
+        }
+        return popStack.isEmpty() ? -1 : popStack.pop();
     }
 }
 
