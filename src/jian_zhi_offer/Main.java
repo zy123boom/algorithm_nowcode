@@ -274,7 +274,7 @@ public class Main {
     }
 
     /**
-     * 剑指 Offer 09. 斐波那契数列
+     * 剑指 Offer 10. 斐波那契数列
      * F(0) = 0,   F(1) = 1
      * F(N) = F(N - 1) + F(N - 2), 其中 N > 1.
      * <p>
@@ -298,6 +298,69 @@ public class Main {
             minusOne = fibN;
         }
         return fibN;
+    }
+
+    /**
+     * 剑指 Offer 11. 旋转数组的最小数字
+     * <p>
+     * 把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。
+     * <p>
+     * 给你一个可能存在 重复 元素值的数组 numbers ，它原来是一个升序排列的数组，并按上述情形进行了一次旋转。
+     * 请返回旋转数组的最小元素。例如，数组 [3,4,5,1,2] 为 [1,2,3,4,5] 的一次旋转，该数组的最小值为1。  
+     * <p>
+     * 示例 1：
+     * 输入：[3,4,5,1,2]
+     * 输出：1
+     * <p>
+     * 示例 2：
+     * 输入：[2,2,2,0,1]
+     * 输出：0
+     *
+     * @param numbers
+     * @return
+     */
+    public int minArray(int[] numbers) {
+        /*
+            问题思路：
+            可以注意到旋转之后的数组实际上划分为两个递增子数组，前面子数组的子元素都大于后面子数组的子元素。则考虑使用二分
+            1.使用二分，设定头指针指向第一个元素，尾指针指向最后一个元素。
+            2.首先找到数组中间元素，若该元素位于第一个递增子数组，则它应该大于或等于头指针指向的元素，要找到的目标元素应该在
+            该中间元素的后面，则修改头指针的位置到中间元素位置，缩小范围。
+            若该元素位于第二个递增子数组则同理，它应该小于或等于尾指针指向的元素，要找到的目标元素应该在
+            该中间元素的前面，则修改尾指针的位置到中间元素位置，缩小范围。
+            3.最终头指针将指向前面子数组的最后一个元素，尾指针将指向后面子数组的第一个元素，即两个指针最后会相邻，而尾指针
+            指向的将是最终的结果元素。
+            4.此处存在特例，若头指针和尾指针和中间指针三个的元素值一致，则无法通过上述实现，只能遍历数组找到目标元素
+         */
+        if (numbers == null || numbers.length == 0) {
+            return 0;
+        }
+
+        int leftIndex = 0;
+        int rightIndex = numbers.length - 1;
+        int midIndex = leftIndex;
+        while (numbers[leftIndex] >= numbers[rightIndex]) {
+            // 步骤3，终止的判断
+            if (rightIndex - leftIndex == 1) {
+                return numbers[rightIndex];
+            }
+
+            midIndex = leftIndex + (rightIndex - leftIndex) / 2;
+            // 步骤4，特殊情况判断
+            if (numbers[leftIndex] == numbers[rightIndex] && numbers[leftIndex] == numbers[midIndex]) {
+                Arrays.sort(numbers);
+                return numbers[0];
+            }
+
+            // 步骤1和2的循环判断
+            if (numbers[midIndex] >= numbers[leftIndex]) {
+                leftIndex = midIndex;
+            } else if (numbers[midIndex] <= numbers[rightIndex]) {
+                rightIndex = midIndex;
+            }
+        }
+
+        return numbers[midIndex];
     }
 }
 
