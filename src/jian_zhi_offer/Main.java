@@ -362,6 +362,91 @@ public class Main {
 
         return numbers[midIndex];
     }
+
+    /**
+     * 剑指 Offer 12. 矩阵中的路径
+     * <p>
+     * 给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；
+     * 否则，返回 false 。
+     * <p>
+     * 单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。
+     * 同一个单元格内的字母不允许被重复使用。
+     * <p>
+     * 示例 1：
+     * 输入：board =
+     * [
+     * ["A","B","C","E"],
+     * ["S","F","C","S"],
+     * ["A","D","E","E"]
+     * ], word = "ABCCED"
+     * 输出：true
+     * <p>
+     * 示例 2：
+     * 输入：board =
+     * [
+     * ["a","b"],
+     * ["c","d"]
+     * ], word = "abcd"
+     * 输出：false
+     *
+     * @param board 矩阵
+     * @param word 要匹配的字符串
+     * @return
+     */
+    public boolean exist(char[][] board, String word) {
+        // 回溯：dfs + 剪枝
+        if (board == null || board.length == 0 || board[0].length == 0 || word == null || "".equals(word)) {
+            return false;
+        }
+
+        boolean[][] visited = new boolean[board.length][board[0].length];
+
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (solve(board, word, i, j, visited, 0)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 第10题帮助函数
+     *
+     * @param board 矩阵
+     * @param row 当前行
+     * @param column 当前列
+     * @param visited 遍历过的标志
+     * @param index 下标，用于记录已经遍历了目标字符串的第几个字符了
+     * @return
+     */
+    private boolean solve(char[][] board, String word, int row, int column, boolean[][] visited, int index) {
+        // 退出条件，越界判断
+        if (row < 0 || row > board.length - 1 || column < 0 || column > board[0].length - 1 || visited[row][column]) {
+            return false;
+        }
+
+        // 退出条件，匹配到某一位置不满足条件
+        if (board[row][column] != word.charAt(index)) {
+            return false;
+        }
+
+        // 退出条件，已匹配成功
+        if (index == word.length() - 1) {
+            return true;
+        }
+
+        // 匹配过程，匹配到
+        visited[row][column] = true;
+        boolean flag = solve(board, word, row + 1, column, visited, index + 1) ||
+                solve(board, word, row - 1, column, visited, index + 1) ||
+                solve(board, word, row, column + 1, visited, index + 1) ||
+                solve(board, word, row, column - 1, visited, index + 1);
+        visited[row][column] = false;
+
+        return flag;
+    }
 }
 
 /**
