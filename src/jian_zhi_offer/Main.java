@@ -390,7 +390,7 @@ public class Main {
      * 输出：false
      *
      * @param board 矩阵
-     * @param word 要匹配的字符串
+     * @param word  要匹配的字符串
      * @return
      */
     public boolean exist(char[][] board, String word) {
@@ -414,11 +414,11 @@ public class Main {
     /**
      * 第10题帮助函数
      *
-     * @param board 矩阵
-     * @param row 当前行
-     * @param column 当前列
+     * @param board   矩阵
+     * @param row     当前行
+     * @param column  当前列
      * @param visited 遍历过的标志
-     * @param index 下标，用于记录已经遍历了目标字符串的第几个字符了
+     * @param index   下标，用于记录已经遍历了目标字符串的第几个字符了
      * @return
      */
     private boolean solve(char[][] board, String word, int row, int column, boolean[][] visited, int index) {
@@ -446,6 +446,60 @@ public class Main {
         visited[row][column] = false;
 
         return flag;
+    }
+
+    private int sum = 0;
+
+    /**
+     * 剑指 Offer 13. 机器人的运动范围
+     * <p>
+     * 地上有一个m行n列的方格，从坐标 [0,0] 到坐标 [m-1,n-1] 。一个机器人从坐标 [0, 0] 的格子开始移动，
+     * 它每次可以向左、右、上、下移动一格（不能移动到方格外），也不能进入行坐标和列坐标的数位之和大于k的格子。
+     * 例如，当k为18时，机器人能够进入方格 [35, 37] ，因为3+5+3+7=18。但它不能进入方格 [35, 38]，
+     * 因为3+5+3+8=19。请问该机器人能够到达多少个格子？
+     *
+     * @param m
+     * @param n
+     * @param k
+     * @return
+     */
+    public int movingCount(int m, int n, int k) {
+        if (m <= 0 || n <= 0) {
+            return 0;
+        }
+
+        boolean[][] visited = new boolean[m][n];
+        solve(0, 0, m, n, visited, k);
+        return sum;
+    }
+
+    private void solve(int row, int col, int rows, int cols, boolean[][] visited, int k) {
+        if (row < 0 || col < 0 || row > rows - 1 || col > cols - 1 || visited[row][col] || (getDigitSum(row) + getDigitSum(col) > k)) {
+            return;
+        }
+
+        // 无需进行回溯，因为只需要判断该点能否抵达
+        visited[row][col] = true;
+        sum++;
+        solve(row + 1, col, rows, cols, visited, k);
+        solve(row - 1, col, rows, cols, visited, k);
+        solve(row, col + 1, rows, cols, visited, k);
+        solve(row, col - 1, rows, cols, visited, k);
+    }
+
+    /**
+     * 计算x各位之和
+     *
+     * @param x
+     * @return
+     */
+    private int getDigitSum(int x) {
+        int res = 0;
+        while (x != 0) {
+            res += x % 10;
+            x /= 10;
+        }
+        return res;
     }
 }
 
