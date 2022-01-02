@@ -1,5 +1,6 @@
 package jian_zhi_offer;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Stack;
 
@@ -500,6 +501,97 @@ public class Main {
             x /= 10;
         }
         return res;
+    }
+
+    /**
+     * 剑指 Offer 14-I. 剪绳子
+     * <p>
+     * 给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n>1并且m>1），
+     * 每段绳子的长度记为 k[0],k[1]...k[m-1] 。请问 k[0]*k[1]*...*k[m-1] 可能的最大乘积是多少？
+     * 例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。
+     * <p>
+     * 示例 1：
+     * 输入: 2
+     * 输出: 1
+     * 解释: 2 = 1 + 1, 1 × 1 = 1
+     * <p>
+     * 示例 2:
+     * 输入: 10
+     * 输出: 36
+     * 解释: 10 = 3 + 3 + 4, 3 × 3 × 4 = 36
+     * <p>
+     * 2 <= n <= 58
+     *
+     * @param n
+     * @return
+     */
+    public int cuttingRope(int n) {
+        /*
+            动态规划
+            定义f(n)为将长度为n的绳子剪成若干段后各段长度乘积的最大值
+            f(n) = max(f(n)*f(n-i)) 其中0<i<n
+         */
+        if (n < 2) {
+            return 0;
+        }
+        if (n == 2) {
+            return 1;
+        }
+        // 1 * 2的情况最大
+        if (n == 3) {
+            return 2;
+        }
+        // dp[i]表示的意思其实是对于长度为n的绳子(n > i)，长度为i的绳子所能做出的贡献最大是多少
+        int[] dp = new int[n + 1];
+        dp[0] = 0;
+        dp[1] = 1;
+        dp[2] = 2;
+        // dp[i]作为一个最大的子绳子长度，去跟后面相乘肯定为最大
+        dp[3] = 3;
+        for (int k = 1; k <= n; k++) {
+            for (int i = 1; i <= k / 2; i++) { // 乘法结合律：a*b=b*a，只需要乘一半即可
+                dp[k] = Math.max(dp[k], dp[k - i] * dp[i]);
+            }
+        }
+        return dp[n];
+    }
+
+    /**
+     * 剑指 Offer 14- II. 剪绳子 II
+     * <p>
+     * 题目同I，答案需要取模 1e9+7（1000000007），如计算初始结果为：1000000008，请返回 1。
+     * <p>
+     * 2 <= n <= 1000
+     *
+     * @param n
+     * @return
+     */
+    public int cuttingRope2(int n) {
+        BigInteger[] dp = new BigInteger[n + 1];
+        if (n < 2) {
+            return 0;
+        }
+        if (n == 2) {
+            return 1;
+        }
+        // 1 * 2的情况最大
+        if (n == 3) {
+            return 2;
+        }
+
+        dp[1] = BigInteger.ONE;
+        dp[2] = BigInteger.valueOf(2);
+        dp[3] = BigInteger.valueOf(3);
+        for (int k = 4; k <= n; k++) {
+            dp[k] = BigInteger.ZERO;
+            for (int i = 1; i <= k / 2; i++) {
+                BigInteger temp = dp[i].multiply(dp[k - i]);
+                if (dp[k].compareTo(temp) < 0) {
+                    dp[k] = temp;
+                }
+            }
+        }
+        return dp[n].mod(BigInteger.valueOf(1000000007)).intValue();
     }
 }
 
