@@ -470,11 +470,11 @@ public class Main {
                     l2 = l2.next;
                 }
                 dummy = dummy.next;
-            } else if (l1 != null && l2 == null) {
+            } else if (l1 != null) {
                 dummy.next = l1;
                 l1 = l1.next;
                 dummy = dummy.next;
-            } else if (l1 == null && l2 != null) {
+            } else {
                 dummy.next = l2;
                 l2 = l2.next;
                 dummy = dummy.next;
