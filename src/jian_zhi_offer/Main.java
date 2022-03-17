@@ -1,7 +1,10 @@
 package jian_zhi_offer;
 
+
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -667,6 +670,76 @@ public class Main {
         }
         return res;
     }
+
+    /**
+     * 剑指 Offer 17. 打印从1到最大的n位数
+     * <p>
+     * 输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。比如输入 3，则打印出 1、2、3
+     * 一直到最大的 3 位数 999。
+     * <p>
+     * 示例 1:
+     * 输入: n = 1
+     * 输出: [1,2,3,4,5,6,7,8,9]
+     *
+     * @param n
+     * @return
+     */
+    public int[] printNumbers(int n) {
+        /*
+            思路一：最终结果的数量为Math.pow(10,n)-1，例如n=2, 则最大的结果是99
+            只需要得到Math.pow(10,n)-1作为结果长度，从1开始遍历即可。但存在int溢出的风险
+
+            思路二：考虑大数，用字符串输出 回溯，用字符串的方式求n位数之内的全排列，
+            回溯的时候需要遍历到每个数字，且需要一个列表保存每次dfs触底生成的数字，
+            所以时空复杂度均为O(10^n)
+         */
+        if (n <= 0) {
+            return null;
+        }
+
+        List<Character> path = new ArrayList<>();
+        List<String> ansList = new ArrayList<>();
+        dfs(n, 0, ansList, path);
+        int[] res = new int[ansList.size()];
+        for (int i = 0; i < res.length; i++) {
+            res[i] = Integer.parseInt(ansList.get(i));
+        }
+        return res;
+    }
+
+    private void dfs(int n, int depth, List<String> ansList, List<Character> path) {
+        // 构建字符串形式的数字
+        if (depth == n) {
+            StringBuilder sb = new StringBuilder();
+            boolean flag = false;
+
+            for (int i = 0; i < n; i++) {
+                Character character = path.get(i);
+                // 忽略字符串中的前导0字符
+                if (flag || !character.equals('0')) {
+                    flag = true;
+                    sb.append(character);
+                }
+            }
+
+            // 全是由0组成，跳过
+            if (!flag) {
+                return;
+            }
+
+            ansList.add(sb.toString());
+            return;
+        }
+
+        for (int i = 0; i < 10; i++) {
+            // 当前路径中添加当前数字的字符形式
+            path.add(String.valueOf(i).charAt(0));
+            dfs(n, depth + 1, ansList, path);
+            path.remove(path.size() - 1);
+        }
+    }
+
+
 }
 
 /**
