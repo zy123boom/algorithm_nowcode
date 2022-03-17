@@ -739,7 +739,144 @@ public class Main {
         }
     }
 
+    /**
+     * 剑指 Offer 18. 删除链表的节点
+     * <p>
+     * 给定单向链表的头指针和一个要删除的节点的值，定义一个函数删除该节点。
+     * 返回删除后的链表的头节点。
+     * <p>
+     * 注意：此题对比原题有改动
+     * <p>
+     * 示例 1:
+     * 输入: head = [4,5,1,9], val = 5
+     * 输出: [4,1,9]
+     * 解释: 给定你链表中值为 5 的第二个节点，那么在调用了你的函数之后，该链表应变为 4 -> 1 -> 9.
+     * <p>
+     * 示例 2:
+     * 输入: head = [4,5,1,9], val = 1
+     * 输出: [4,5,9]
+     * 解释: 给定你链表中值为 1 的第三个节点，那么在调用了你的函数之后，该链表应变为 4 -> 5 -> 9
+     *
+     * @param head
+     * @param val
+     * @return
+     */
+    public ListNode deleteNode(ListNode head, int val) {
+        /*
+            单指针
+                         cur cur.next
+                         |   |
+            dummy->4->5->1-> 9 ->null
+            |      |
+            cur   cur.next
 
+            cur=dummy,cur.next就是head。判断cur.next.val是否等于Val，是则删除该节点
+            边界条件：
+            左边界cur.next != null
+            右边界:由图可知，若cur.next.val在链表最后一个，即图中的9。那么需要将cur指向cur.next的null
+            并且跳出
+
+         */
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode cur = dummy;
+        while (cur.next != null) {
+            if (cur.next.val == val) {
+                // 右边界:当val是最后一个节点
+                if (cur.next.next == null) {
+                    cur.next = null;
+                    break;
+                }
+
+                // 删除
+                cur.next = cur.next.next;
+            }
+            cur = cur.next;
+        }
+        return dummy.next;
+    }
+
+    /**
+     * 剑指 Offer 20. 表示数值的字符串
+     * <p>
+     * 请实现一个函数用来判断字符串是否表示数值（包括整数和小数）。
+     * <p>
+     * 数值（按顺序）可以分成以下几个部分：
+     * 若干空格
+     * 一个 小数 或者 整数
+     * （可选）一个 'e' 或 'E' ，后面跟着一个 整数
+     * 若干空格
+     * <p>
+     * 小数（按顺序）可以分成以下几个部分：
+     * （可选）一个符号字符（'+' 或 '-'）
+     * 下述格式之一：
+     * 至少一位数字，后面跟着一个点 '.'
+     * 至少一位数字，后面跟着一个点 '.' ，后面再跟着至少一位数字
+     * 一个点 '.' ，后面跟着至少一位数字
+     * <p>
+     * 整数（按顺序）可以分成以下几个部分：
+     * （可选）一个符号字符（'+' 或 '-'）
+     * 至少一位数字
+     * 部分数值列举如下：
+     * ["+100", "5e2", "-123", "3.1416", "-1E-16", "0123"]
+     * 部分非数值列举如下：
+     * ["12e", "1a3.14", "1.2.3", "+-5", "12e+5.4"]
+     *  
+     *
+     * @param s
+     * @return
+     */
+    public boolean isNumber(String s) {
+        /*
+            要满足以下几个条件：
+            .之前不能有e/E
+            e之前不能有e，且必须有数字，eg:123e10，并且不能为12e这种格式
+            +/-符号 要出现在第一个位置，或e后面的第一个位置
+         */
+
+        if (s == null || s.length() == 0) {
+            return false;
+        }
+
+        // 表示num是否出现
+        boolean isNum = false;
+        // 表示.是否出现
+        boolean isDot = false;
+        // 表示e/E是否出现
+        boolean isE = false;
+
+        char[] arr = s.trim().toCharArray();
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] >= '0' && arr[i] <= '9') {
+                isNum = true;
+            } else if (arr[i] == '.') {
+                // .之前不能有e/E
+                if (isDot || isE) {
+                    return false;
+                }
+                isDot = true;
+            } else if (arr[i] == 'e' || arr[i] == 'E') {
+                // e之前不能有e，且必须有数字，eg:123e10，
+                if (isE || !isNum) {
+                    return false;
+                }
+                isE = true;
+                // 并且不能为12e，12e+这种格式
+                // 重置isNum，因为'e'或'E'之后也必须接上整数，防止出现 123e或者123e+的非法情况
+                isNum = false;
+            } else if (arr[i] == '+' || arr[i] == '-') {
+                // +/-符号 要出现在第一个位置，或e后面的第一个位置
+                if (i != 0 && arr[i - 1] != 'e' && arr[i - 1] != 'E') {
+                    return false;
+                }
+            } else {
+                // 其他字符情况
+                return false;
+            }
+        }
+
+        return isNum;
+    }
 }
 
 /**
