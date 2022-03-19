@@ -1,6 +1,7 @@
 package jian_zhi_offer;
 
 
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -920,6 +921,87 @@ public class Main {
             nums[right] = temp;
         }
         return nums;
+    }
+
+    /**
+     * 剑指 Offer 22. 链表中倒数第k个节点
+     * <p>
+     * 输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，本题从1开始计数，
+     * 即链表的尾节点是倒数第1个节点。
+     * 例如，一个链表有 6 个节点，从头节点开始，它们的值依次是 1、2、3、4、5、6。
+     * 这个链表的倒数第 3 个节点是值为 4 的节点
+     * <p>
+     * 示例：
+     * 给定一个链表: 1->2->3->4->5, 和 k = 2.
+     * 返回链表 4->5.
+     *
+     * @param head
+     * @param k
+     * @return
+     */
+    public ListNode getKthFromEnd(ListNode head, int k) {
+        /*
+            快慢指针法。
+            首先让快指针移动n个位置，然后同时移动快慢指针，此时慢指针的下一个元素就是目标元素
+         */
+        if (head == null || k <= 0) {
+            return null;
+        }
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode fast = dummy;
+        ListNode slow = dummy;
+        for (int i = 0; i < k; i++) {
+            if (fast.next != null) {
+                fast = fast.next;
+            } else {
+                return null;
+            }
+        }
+
+        while (fast.next != null) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+
+        return slow.next;
+    }
+
+    /**
+     * 剑指 Offer 23. 链表中环的入口节点
+     *
+     * 对于一个给定的链表，返回环的入口节点，如果没有环，返回null
+     *
+     * @param head
+     * @return
+     */
+    public ListNode detectCycle(ListNode head) {
+        /*
+            算法二：快慢指针判环，如果有环，则让fast指针回到开头，变为每次走一步，
+            然后两个指针一起走，相遇处就是入环节点
+         */
+        if (head == null || head.next == null || head.next.next == null) {
+            return head;
+        }
+
+        ListNode fast = head.next.next;
+        ListNode slow = head.next;
+        while (fast != slow) {
+            if (fast == null || fast.next == null) {
+                return null;
+            }
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+
+        // 到此处已有环
+        fast = head;
+        while (fast != slow) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+
+        return slow;
     }
 }
 
