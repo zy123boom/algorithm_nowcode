@@ -1,7 +1,6 @@
 package jian_zhi_offer;
 
 
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -969,7 +968,7 @@ public class Main {
 
     /**
      * 剑指 Offer 23. 链表中环的入口节点
-     *
+     * <p>
      * 对于一个给定的链表，返回环的入口节点，如果没有环，返回null
      *
      * @param head
@@ -1002,6 +1001,132 @@ public class Main {
         }
 
         return slow;
+    }
+
+    /**
+     * 剑指 Offer 25. 合并两个排序的链表
+     *
+     * @param l1
+     * @param l2
+     * @return
+     */
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        /*
+            递归实现：
+        if (l1 == null) {
+            return l2;
+        }
+        if (l2 == null) {
+            return l1;
+        }
+
+        ListNode head = null;
+        if (l1.val < l2.val) {
+            head = l1;
+            head.next = mergeTwoLists(l1.next, l2);
+        } else {
+            head = l2;
+            head.next = mergeTwoLists(l1, l2.next);
+        }
+
+        return head;
+        */
+        ListNode dummy = new ListNode(0);
+        ListNode res = dummy;
+        while (l1 != null || l2 != null) {
+            if (l1 != null && l2 != null) {
+                if (l1.val < l2.val) {
+                    dummy.next = l1;
+                    l1 = l1.next;
+                } else {
+                    dummy.next = l2;
+                    l2 = l2.next;
+                }
+                dummy = dummy.next;
+            } else if (l1 != null) {
+                dummy.next = l1;
+                l1 = l1.next;
+                dummy = dummy.next;
+            } else {
+                dummy.next = l2;
+                l2 = l2.next;
+                dummy = dummy.next;
+            }
+        }
+
+        return res.next;
+    }
+
+    /**
+     * 剑指 Offer 26. 树的子结构
+     * <p>
+     * 输入两棵二叉树A和B，判断B是不是A的子结构。(约定空树不是任意一个树的子结构)
+     * B是A的子结构， 即 A中有出现和B相同的结构和节点值。
+     * <p>
+     * 例如:
+     * 给定的树 A:
+     *      3
+     *     / \
+     *    4   5
+     *   / \
+     *  1   2
+     * 给定的树 B：
+     *    4 
+     *   /
+     *  1
+     * 返回 true，因为 B 与 A 的一个子树拥有相同的结构和节点值。
+     * <p>
+     * 示例 1：
+     * 输入：A = [1,2,3], B = [3,1]
+     * 输出：false
+     * <p>
+     * 示例 2：
+     * 输入：A = [3,4,5,1,2], B = [4,1]
+     * 输出：true
+     *
+     * @param A
+     * @param B
+     * @return
+     */
+    public boolean isSubStructure(TreeNode A, TreeNode B) {
+        /*
+            第一步：在A中找到和B的根节点的值一样的节点R
+            第二步：判断树A中以R为根节点的子树是否和B结构一样
+         */
+
+        boolean result = false;
+        if (A != null && B != null) {
+            // 满足第一步条件
+            if (A.val == B.val) {
+                // 第二层判断
+                result = isTree1HaveTree2(A, B);
+            }
+            // 未满足，则递归往下判断A的左右子树
+            if (!result) {
+                result = isSubStructure(A.left, B);
+            }
+            if (!result) {
+                result = isSubStructure(A.right, B);
+            }
+        }
+        return result;
+    }
+
+    // 26题帮助函数
+    private boolean isTree1HaveTree2(TreeNode A, TreeNode B) {
+        if (B == null) {
+            return true;
+        }
+
+        if (A == null) {
+            return false;
+        }
+
+        if (A.val != B.val) {
+            return false;
+        }
+
+        return isTree1HaveTree2(A.left, B.left) && isTree1HaveTree2(A.right, B.right);
     }
 }
 
