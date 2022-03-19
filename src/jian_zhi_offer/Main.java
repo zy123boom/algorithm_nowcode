@@ -877,6 +877,50 @@ public class Main {
 
         return isNum;
     }
+
+    /**
+     * 剑指 Offer 21. 调整数组顺序使奇数位于偶数前面
+     * <p>
+     * 输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有
+     * 奇数在数组的前半部分，所有偶数在数组的后半部分。
+     * <p>
+     * 示例：
+     * 输入：nums = [1,2,3,4]
+     * 输出：[1,3,2,4]
+     * 注：[3,1,2,4] 也是正确的答案之一。
+     *
+     * @param nums
+     * @return
+     */
+    public int[] exchange(int[] nums) {
+        /*
+            算法流程：
+            1.初始化： i，j 双指针，分别指向数组 nums 左右两端；
+            2.循环交换： 当 i = j 时跳出；
+            3.指针 i 遇到奇数则执行 i = i + 1跳过，直到找到偶数；
+            4.指针 j 遇到偶数则执行 j = j - 1 跳过，直到找到奇数；
+            交换 nums[i]nums[i] 和 nums[j]nums[j] 值；
+            返回值： 返回已修改的 nums 数组。
+         */
+        if (nums == null || nums.length == 0) {
+            return nums;
+        }
+        int left = 0, right = nums.length - 1;
+        while (left < right) {
+            // 遇到奇数跳过
+            while (left < right && (nums[left] & 1) == 1) {
+                left++;
+            }
+            // 遇到偶数跳过
+            while (left < right && (nums[right] & 1) == 0) {
+                right--;
+            }
+            int temp = nums[left];
+            nums[left] = nums[right];
+            nums[right] = temp;
+        }
+        return nums;
+    }
 }
 
 /**
