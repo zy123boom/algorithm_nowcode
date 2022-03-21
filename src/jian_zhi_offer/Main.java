@@ -1202,6 +1202,108 @@ public class Main {
             node.right = temp;
         }
     }
+
+    /**
+     * 剑指 Offer 28. 对称的二叉树
+     * <p>
+     * 请实现一个函数，用来判断一棵二叉树是不是对称的。如果一棵二叉树和它的镜像一样，那么它是对称的。
+     * 例如，二叉树 [1,2,2,3,4,4,3] 是对称的。
+     *     1
+     *    / \
+     *   2   2
+     *  / \ / \
+     * 3  4 4  3
+     * 但是下面这个 [1,2,2,null,3,null,3] 则不是镜像对称的:
+     *     1
+     *    / \
+     *   2   2
+     *    \   \
+     *    3    3
+     *
+     * @param root
+     * @return
+     */
+    public boolean isSymmetric(TreeNode root) {
+        return judgeIsSymmetric(root, root);
+    }
+
+    private boolean judgeIsSymmetric(TreeNode root1, TreeNode root2) {
+        if (root1 == null && root2 == null) {
+            return true;
+        }
+
+        if (root1 == null ^ root2 == null) {
+            return false;
+        }
+
+        if (root1.val != root2.val) {
+            return false;
+        }
+
+        return judgeIsSymmetric(root1.left, root2.right) && judgeIsSymmetric(root1.right, root2.left);
+    }
+
+    /**
+     * 剑指 Offer 29. 顺时针打印矩阵
+     * <p>
+     * 输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字。
+     * <p>
+     * 示例 1：
+     * 输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+     * 输出：[1,2,3,6,9,8,7,4,5]
+     * <p>
+     * 示例 2：
+     * 输入：matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+     * 输出：[1,2,3,4,8,12,11,10,9,5,6,7]
+     *
+     * @param matrix
+     * @return
+     */
+    public int[] spiralOrder(int[][] matrix) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return new int[0];
+        }
+
+        int row = matrix.length;
+        int col = matrix[0].length;
+
+        int top = 0, bottom = row - 1;
+        int left = 0, right = col - 1;
+        int[] res = new int[row * col];
+
+        int index = 0;
+        while (top < bottom && left < right) {
+            for (int i = left; i < right; i++) {
+                res[index++] = matrix[top][i];
+            }
+            for (int i = top; i < bottom; i++) {
+                res[index++] = matrix[i][right];
+            }
+            for (int i = right; i > left; i--) {
+                res[index++] = matrix[bottom][i];
+            }
+            for (int i = bottom; i > top; i--) {
+                res[index++] = matrix[i][left];
+            }
+            top++;
+            bottom--;
+            left++;
+            right--;
+        }
+
+        // 特殊情况：只剩了一排或只剩了一列
+        if (top == bottom) {
+            for (int i = left; i <= right; i++) {
+                res[index++] = matrix[top][i];
+            }
+        } else if (left == right) {
+            for (int i = top; i <= bottom; i++) {
+                res[index++] = matrix[i][right];
+            }
+        }
+
+        return res;
+    }
 }
 
 /**
