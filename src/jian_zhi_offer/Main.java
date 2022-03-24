@@ -1304,6 +1304,36 @@ public class Main {
 
         return res;
     }
+
+    /**
+     * 剑指 Offer 31. 栈的压入、弹出序列
+     *
+     * 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。
+     * 假设压入栈的所有数字均不相等。例如，序列 {1,2,3,4,5} 是某栈的压栈序列，序列 {4,5,3,2,1}
+     * 是该压栈序列对应的一个弹出序列，但 {4,3,5,1,2} 就不可能是该压栈序列的弹出序列。
+     *
+     * @param pushed
+     * @param popped
+     * @return
+     */
+    public boolean validateStackSequences(int[] pushed, int[] popped) {
+        /*
+            循环pushed，入栈。然后模拟出栈，进行判断
+            即：如果下一个弹出的数字刚好是栈顶数字，直接弹出。如果下一个弹出的数字不在栈顶，则把压栈序列中还没有入栈的数字
+            压入辅助栈，直到把下一个需要弹出的数字压入栈顶为止。
+         */
+        Stack<Integer> stack = new Stack<>();
+        int index = 0;
+        for (int pushEle : pushed) {
+            stack.push(pushEle);
+            while (!stack.isEmpty() && stack.peek() == popped[index]) {
+                stack.pop();
+                index++;
+            }
+        }
+
+        return stack.isEmpty();
+    }
 }
 
 /**
@@ -1343,6 +1373,63 @@ class CQueue {
             popStack.push(pushStack.pop());
         }
         return popStack.isEmpty() ? -1 : popStack.pop();
+    }
+}
+
+/**
+ * 剑指 Offer 30. 包含min函数的栈
+ * <p>
+ * 定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的 min 函数在该栈中，调用 min、push 及 pop 的时间复杂度都是 O(1)。
+ */
+class MinStack {
+
+    private Stack<Integer> dataStack;
+
+    private Stack<Integer> minStack;
+
+
+    /**
+     * initialize your data structure here.
+     */
+    public MinStack() {
+        dataStack = new Stack<>();
+        minStack = new Stack<>();
+    }
+
+    public void push(int x) {
+        /*
+            首先判断最小栈是否为空，为空则入栈。如果不为空，则判断要入栈的元素是否比最小栈栈顶元素还小，
+            是则入栈。最后将元素入数据栈。
+         */
+        dataStack.push(x);
+        if (minStack.isEmpty() || x <= min()) {
+            minStack.push(x);
+        }
+    }
+
+    public void pop() {
+        /*
+            判断数据栈不为空，满足则取出栈数据栈栈顶元素，如果该元素也是最小栈的栈顶，同时出栈。
+         */
+        if (dataStack.isEmpty()) {
+            throw new RuntimeException();
+        }
+
+        Integer pop = dataStack.pop();
+        if (pop == min()) {
+            minStack.pop();
+        }
+    }
+
+    public int top() {
+        return dataStack.peek();
+    }
+
+    public int min() {
+        if (minStack.isEmpty()) {
+            throw new RuntimeException();
+        }
+        return minStack.peek();
     }
 }
 
