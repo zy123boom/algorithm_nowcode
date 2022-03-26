@@ -1307,7 +1307,7 @@ public class Main {
 
     /**
      * 剑指 Offer 31. 栈的压入、弹出序列
-     *
+     * <p>
      * 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。
      * 假设压入栈的所有数字均不相等。例如，序列 {1,2,3,4,5} 是某栈的压栈序列，序列 {4,5,3,2,1}
      * 是该压栈序列对应的一个弹出序列，但 {4,3,5,1,2} 就不可能是该压栈序列的弹出序列。
@@ -1334,6 +1334,144 @@ public class Main {
 
         return stack.isEmpty();
     }
+
+    /**
+     * 剑指 Offer 32 - I. 从上到下打印二叉树
+     * <p>
+     * 从上到下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。
+     *
+     * @param root
+     * @return
+     */
+    public int[] levelOrder(TreeNode root) {
+        // 层序遍历
+        if (root == null) {
+            return new int[0];
+        }
+
+        List<Integer> list = new ArrayList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+
+        queue.offer(root);
+
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            list.add(node.val);
+            if (node.left != null) {
+                queue.offer(node.left);
+            }
+            if (node.right != null) {
+                queue.offer(node.right);
+            }
+        }
+
+        int[] res = new int[list.size()];
+        for (int i = 0; i < res.length; i++) {
+            res[i] = list.get(i);
+        }
+
+        return res;
+    }
+
+    /**
+     * 剑指 Offer 32 - II. 从上到下打印二叉树 II
+     * 从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印，每一层打印到一行。
+     * <p>
+     * 例如:
+     * 给定二叉树: [3,9,20,null,null,15,7],
+     * 3
+     * / \
+     * 9  20
+     * /  \
+     * 15   7
+     * <p>
+     * 返回其层次遍历结果：
+     * [
+     * [3],
+     * [9,20],
+     * [15,7]
+     * ]
+     *
+     * @param root
+     * @return
+     */
+    public List<List<Integer>> levelOrder2(TreeNode root) {
+        // leetcode版层次遍历，经典BFS
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            List<Integer> level = new ArrayList<>();
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                if (node == null) {
+                    continue;
+                }
+                level.add(node.val);
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+            }
+            res.add(level);
+        }
+
+        return res;
+    }
+
+    /**
+     * 剑指 Offer 32 - III. 从上到下打印二叉树 III
+     * <p>
+     * 请实现一个函数按照之字形顺序打印二叉树，即第一行按照从左到右的顺序打印，
+     * 第二层按照从右到左的顺序打印，第三行再按照从左到右的顺序打印，其他行以此类推。
+     *
+     * @param root
+     * @return
+     */
+    public List<List<Integer>> levelOrder3(TreeNode root) {
+        // leetcode版之字形打印二叉树，利用API实现
+        List<List<Integer>> res = new ArrayList<>();
+
+        if (root == null) {
+            return res;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        while (!queue.isEmpty()) {
+            LinkedList<Integer> level = new LinkedList<>();
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                if (node == null) {
+                    continue;
+                }
+                if (res.size() % 2 == 0) {
+                    level.addLast(node.val);
+                } else {
+                    level.addFirst(node.val);
+                }
+
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+            }
+            res.add(level);
+        }
+
+        return res;
+    }
+
 }
 
 /**
