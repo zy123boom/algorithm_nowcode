@@ -1472,6 +1472,63 @@ public class Main {
         return res;
     }
 
+    /**
+     * 剑指 Offer 33. 二叉搜索树的后序遍历序列
+     * <p>
+     * 输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历结果。
+     * 如果是则返回 true，否则返回 false。假设输入的数组的任意两个数字都互不相同。
+     * <p>
+     * 参考以下这颗二叉搜索树：
+     * 5
+     * / \
+     * 2   6
+     * / \
+     * 1   3
+     * <p>
+     * 示例 1：
+     * 输入: [1,6,3,2,5]
+     * 输出: false
+     * <p>
+     * 示例 2：
+     * 输入: [1,3,2,6,5]
+     * 输出: true
+     *
+     * @param postOrder
+     * @return
+     */
+    public boolean verifyPostOrder(int[] postOrder) {
+        /*
+            根节点是最后一个元素的之。数组中前面的数字分为两部分：
+            1.左子树节点的值，应小于根节点
+            2.右子树节点的值，应大于根节点。
+            递归去逐层判断
+         */
+        if (postOrder == null || postOrder.length == 0) {
+            return true;
+        }
+
+        return recur(postOrder, 0, postOrder.length - 1);
+    }
+
+    private boolean recur(int[] postOrder, int i, int j) {
+        if (i >= j) {
+            // 说明此子树节点数量≤1 ，无需判别正确性
+            return true;
+        }
+        //  遍历后序遍历的 [i, j]区间元素，寻找 第一个大于根节点 的节点，
+        //  索引记为m 。此时，可划分出左子树区间 [i,m-1], 右子树区间[m,j−1] 、根节点索引j 。
+        int p = i;
+        while (postOrder[p] < postOrder[j]) {
+            p++;
+        }
+        int m = p;
+        while (postOrder[p] > postOrder[j]) {
+            p++;
+        }
+        // p == j用于判断是否二叉搜索树
+        return p == j && recur(postOrder, i, m - 1) && recur(postOrder, m, j - 1);
+    }
+
 }
 
 /**
