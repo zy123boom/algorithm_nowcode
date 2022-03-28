@@ -1529,6 +1529,44 @@ public class Main {
         return p == j && recur(postOrder, i, m - 1) && recur(postOrder, m, j - 1);
     }
 
+    /**
+     * 剑指 Offer 34. 二叉树中和为某一值的路径
+     * <p>
+     * 给你二叉树的根节点 root 和一个整数目标和 targetSum ，找出所有 从根节点到叶子节点
+     * 路径总和等于给定目标和的路径。
+     *
+     * @param root
+     * @param target
+     * @return
+     */
+    public List<List<Integer>> pathSum(TreeNode root, int target) {
+        // DFS 枚举每一条从根节点到叶子节点的路径。当我们遍历到叶子节点，
+        // 且此时路径和恰为目标和时，我们就找到了一条满足条件的路径
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
+
+        dfs(root, target, new ArrayList<>(), res);
+        return res;
+    }
+
+    private void dfs(TreeNode root, int target, List<Integer> curr, List<List<Integer>> res) {
+        if (root == null) {
+            return;
+        }
+
+        curr.add(root.val);
+        target -= root.val;
+        if (target == 0 && root.left == null && root.right == null) {
+            res.add(new ArrayList<>(curr));
+        }
+
+        dfs(root.left, target, curr, res);
+        dfs(root.right, target, curr, res);
+        curr.remove(curr.size() - 1);
+    }
+
 }
 
 /**
