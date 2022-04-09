@@ -1567,6 +1567,110 @@ public class Main {
         curr.remove(curr.size() - 1);
     }
 
+    /**
+     * 剑指 Offer 38. 字符串的排列
+     * <p>
+     * 输入一个字符串，打印出该字符串中字符的所有排列。
+     * 你可以以任意顺序返回这个字符串数组，但里面不能有重复元素。
+     *
+     * @param s
+     * @return
+     */
+    public String[] permutation(String s) {
+        // 全排列，使用dfs。为了防止重复，容器选择为HashSet
+        if (s == null || "".equals(s)) {
+            return new String[0];
+        }
+
+        char[] charArr = s.toCharArray();
+        Set<String> temp = new HashSet<>();
+        permutationHelper(temp, charArr, new StringBuilder(), new boolean[charArr.length]);
+
+        String[] res = new String[temp.size()];
+
+        Iterator<String> iterator = temp.iterator();
+        int index = 0;
+        while (iterator.hasNext()) {
+            res[index++] = iterator.next();
+        }
+
+        return res;
+    }
+
+    private void permutationHelper(Set<String> res, char[] charArr, StringBuilder sb, boolean[] visited) {
+        if (sb.length() == charArr.length) {
+            res.add(sb.toString());
+            return;
+        }
+
+        for (int i = 0; i < charArr.length; i++) {
+            if (visited[i]) {
+                continue;
+            }
+
+            visited[i] = true;
+            sb.append(charArr[i]);
+            permutationHelper(res, charArr, sb, visited);
+
+            // backtracking
+            sb.deleteCharAt(sb.length() - 1);
+            visited[i] = false;
+        }
+    }
+
+    /**
+     * 剑指 Offer 39. 数组中出现次数超过一半的数字
+     * <p>
+     * 数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
+     * 你可以假设数组是非空的，并且给定的数组总是存在多数元素。
+     *
+     * @param nums
+     * @return
+     */
+    public int majorityElement(int[] nums) {
+        /*
+            若一个数字出现的次数超过数组长度的一半，即它出现的次数比其他所有数字出现总和还要多
+            设置一个记录当前遍历的数字，一个次数记录
+            1.当遍历到下一个数字的时候，若下一个数字和之前保存的数字相同，则time++
+            2.若下一个数字和之前保存的数字相同，则time--。如果次数为0，则重新保存下一个数字并设置time为1
+            3.最终要找的数字是最后一次把次数设置为1时对应的数字
+         */
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+
+        int result = nums[0];
+        int times = 1;
+
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] == result) {
+                times++;
+            } else if (times == 0) {
+                result = nums[i];
+                times = 1;
+            } else {
+                times--;
+            }
+        }
+
+        // 用于特殊情况：出现频率最高的数字都没有超过数组长度的一半
+        if (!checkMoreThanHalf(nums, result)) {
+            return 0;
+        }
+
+        return result;
+    }
+
+    private boolean checkMoreThanHalf(int[] nums, int result) {
+        int times = 0;
+        for (int num : nums) {
+            if (num == result) {
+                times++;
+            }
+        }
+
+        return times * 2 > nums.length;
+    }
 }
 
 /**
@@ -1663,6 +1767,60 @@ class MinStack {
             throw new RuntimeException();
         }
         return minStack.peek();
+    }
+}
+
+// 队列实现栈
+class MyStack {
+    private Queue<Integer> queue;
+    private Queue<Integer> help;
+    /** Initialize your data structure here. */
+    public MyStack() {
+        queue = new LinkedList<Integer>();
+        help = new LinkedList<Integer>();
+    }
+
+    /** Push element x onto stack. */
+    public void push(int x) {
+        queue.add(x);
+    }
+
+    /** Removes the element on top of the stack and returns that element. */
+    public int pop() {
+        if(queue.isEmpty()){
+            throw new RuntimeException("Stack is empty!");
+        }
+        while(queue.size() > 1){
+            help.add(queue.poll());
+        }
+        int res = queue.poll();
+        swap();
+        return res;
+    }
+
+    /** Get the top element. */
+    public int top() {
+        if(queue.isEmpty()){
+            throw new RuntimeException("Stack is empty!");
+        }
+        while(queue.size() != 1){
+            help.add(queue.poll());
+        }
+        int res = queue.poll();
+        help.add(res);
+        swap();
+        return res;
+    }
+
+    /** Returns whether the stack is empty. */
+    public boolean empty() {
+        return queue.size() == 0;
+    }
+
+    private void swap(){
+        Queue<Integer> tmp = help;
+        help = queue;
+        queue = tmp;
     }
 }
 
